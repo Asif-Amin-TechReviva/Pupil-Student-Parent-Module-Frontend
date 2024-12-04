@@ -25,7 +25,7 @@ const auth = (state = initialState, action) => {
         ...state,
         isLoggedIn: true,
         isInitialized: true,
-        user
+        user,
       };
     }
     case LOGOUT: {
@@ -33,7 +33,8 @@ const auth = (state = initialState, action) => {
         ...state,
         isInitialized: true,
         isLoggedIn: false,
-        user: null
+        user: null,
+        role:null
       };
     }
     default: {

@@ -31,6 +31,7 @@ export default function AuthLogin({ forgot }) {
   };
 
   return (
+    <>
     <Grid container justifyContent="center" alignItems="center" spacing={2}>
       {error && (
         <Grid item xs={12}>
@@ -46,5 +47,6 @@ export default function AuthLogin({ forgot }) {
         </AnimateButton>
       </Grid>
     </Grid>
+
   );
 }

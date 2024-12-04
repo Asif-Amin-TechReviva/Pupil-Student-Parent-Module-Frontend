@@ -25,7 +25,7 @@ export default function AuthLogin({ forgot }) {
   const { isLoggedIn, login } = useAuth();
   const scriptedRef = useScriptRef();
   const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigate();
+  // const navigation = useNavigate();
 
 
   const handleClickShowPassword = () => {
@@ -40,21 +40,21 @@ export default function AuthLogin({ forgot }) {
     <>
       <Formik
         initialValues={{
-          email: '',
+          schoolId: '',
           password: '',
           submit: null
         }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
+        // validationSchema={Yup.object().shape({
+        //   schoolId: Yup.string().schoolId('Must be a valid schoolId').max(255).required('schoolId is required'),
+        //   password: Yup.string().max(255).required('Password is required')
+        // })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            await login(values.email, values.password);
+            await login(values.schoolId, values.password);
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
-              navigation('/auth/code-verification');
+              // navigation('/auth/code-verification');
               // Redirect or handle successful login
             }
           } catch (err) {
@@ -72,22 +72,22 @@ export default function AuthLogin({ forgot }) {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                  <InputLabel htmlFor="schoolId-login">schoolId Address</InputLabel>
                   <OutlinedInput
-                    id="email-login"
-                    type="email"
-                    value={values.email}
-                    name="email"
+                    id="schoolId-login"
+                    type="schoolId"
+                    value={values.schoolId}
+                    name="schoolId"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter email address"
+                    placeholder="Enter schoolId address"
                     fullWidth
-                    error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.schoolId && errors.schoolId)}
                   />
                 </Stack>
-                {touched.email && errors.email && (
-                  <FormHelperText error id="standard-weight-helper-text-email-login">
-                    {errors.email}
+                {touched.schoolId && errors.schoolId && (
+                  <FormHelperText error id="standard-weight-helper-text-schoolId-login">
+                    {errors.schoolId}
                   </FormHelperText>
                 )}
               </Grid>

@@ -7,18 +7,17 @@
 // import support from './support';
 // import pages from './pages';
 
-import Home from "./home";
-import Fee from "./fee";
-import Academics from "./academics";
-import ResourceSharing from "./resource-sharing";
-import Communication from "./communication";
-import BusCancelation from "./busCancelation";
-
+import Home from './home';
+import Fee from './fee';
+import Academics from './academics';
+import ResourceSharing from './resource-sharing';
+import Communication from './communication';
+import BusCancelation from './busCancelation';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [Home,Fee,Academics,ResourceSharing,Communication,BusCancelation]
+  items: [Home, Fee, Academics, ResourceSharing, Communication, BusCancelation]
 };
 
 export default menuItems;

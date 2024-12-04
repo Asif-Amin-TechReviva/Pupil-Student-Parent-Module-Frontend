@@ -15,20 +15,20 @@ const initialState = {
   user: null
 };
 
-const verifyToken = (serviceToken) => {
-  if (!serviceToken) {
+const verifyToken = (accessToken) => {
+  if (!accessToken) {
     return false;
   }
-  const decoded = jwtDecode(serviceToken);
-  return decoded.exp > Date.now() / 1000;
+  const decoded = jwtDecode(accessToken);
+  return decoded
 };
 
-const setSession = (serviceToken) => {
-  if (serviceToken) {
-    localStorage.setItem('serviceToken', serviceToken);
-    axios.defaults.headers.common.Authorization = `Bearer ${serviceToken}`;
+const setSession = (accessToken) => {
+  if (accessToken) {
+    localStorage.setItem('accessToken', accessToken);
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
-    localStorage.removeItem('serviceToken');
+    localStorage.removeItem('accessToken');
     delete axios.defaults.headers.common.Authorization;
   }
 };
@@ -41,12 +41,13 @@ export const JWTProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const serviceToken = window.localStorage.getItem('serviceToken');
-        if (serviceToken && verifyToken(serviceToken)) {
-          setSession(serviceToken);
+        const accessToken = window.localStorage.getItem('accessToken');
+        if (accessToken && verifyToken(accessToken)) {
+          // if (accessToken) {
+          setSession(accessToken);
           const userDetailsString = localStorage.getItem('userDetails');
           const user = userDetailsString ? JSON.parse(userDetailsString) : null;
-
+          // alert('helloo')
           dispatch({
             type: LOGIN,
             payload: {
@@ -55,6 +56,7 @@ export const JWTProvider = ({ children }) => {
             }
           });
         } else {
+          // alert('hdhhdhhdh')
           dispatch({
             type: LOGOUT
           });
@@ -70,61 +72,27 @@ export const JWTProvider = ({ children }) => {
     init();
   }, []);
 
-  // const login = async (email, password) => {
-  //   try {
-  //     // Make the API call
-  //     const response = await axios.post('https://api.qa.lx-medical2.techreviva.com/v1/auth/admin-login', {
-  //       email,
-  //       password
-  //     });
-      
-  //     // Extract user data from the response
-  //     const { user } = response.data;
-  
-  //     // Hardcoded service token (for testing only)
-  //     const serviceToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4NjllNjRlLWIyMzItNDIzMC05OGY0LWI5MWNjYzg2NzkzOSIsImlhdCI6MTcyMzAxOTM1NH0.BcJTbmTm8OAUEgRXOPpKL0KrMvByjfdGrN4_vdRhKMk';
-      
-  //     // Set session with the hardcoded token
-  //     setSession(serviceToken);
-  
-  //     // Dispatch login action with user data
-  //     dispatch({
-  //       type: LOGIN,
-  //       payload: {
-  //         isLoggedIn: true,
-  //         user
-  //       }
-  //     });
-  //   } catch (err) {
-  //     // Log the error for debugging
-  //     console.error('Login error:', err);
-  
-  //     // Re-throw the error for handling in the component
-  //     throw err;
-  //   }
-  // };
+ 
   
 
-  const login = async (email, password) => {
+  const login = async (schoolId, password) => {
     try {
-      const response = await axios.post('/auth/admin-login', {
-        email,
+      const response = await axios.post('/student/login', {
+        schoolId,
         password
       });
-      const user  = response.data;
-      localStorage.setItem('userDetails', JSON.stringify(user));
-      const placeholderToken = 'temporary-token-for-navigation';
+      const accessToken= response.data.data.accessToken;
+      const user= response.data.data.user;
+      setSession(accessToken);
+      dispatch({
+        type: LOGIN,
+        payload: {
+          isLoggedIn: true,
+          user
 
-      setSession(placeholderToken);
+        }
+      });
 
-      // Dispatch login action with user data
-      // dispatch({
-      //   type: LOGIN,
-      //   payload: {
-      //     isLoggedIn: true,
-      //     user
-      //   }
-      // });
     } catch (err) {
       console.error('Login error:', err);
       throw err;
@@ -132,24 +100,24 @@ export const JWTProvider = ({ children }) => {
   };
 
   const authenticate_me = async (userId, OTP) => {
-    try {
-      const response = await axios.post('/auth/authenticate-admin', {
-        userId,
-        OTP
-      });
-      const { serviceToken, user } = response.data;
-      setSession(serviceToken);
-      dispatch({
-        type: LOGIN,
-        payload: {
-          isLoggedIn: true,
-          user
-        }
-      });
-    } catch (err) {
-      console.error('Authentication error:', err);
-      throw err;
-    }
+    // try {
+    //   const response = await axios.post('/auth/authenticate-admin', {
+    //     userId,
+    //     OTP
+    //   });
+    //   const { accessToken, user } = response.data.data.token;
+    //   setSession(accessToken);
+    //   dispatch({
+    //     type: LOGIN,
+    //     payload: {
+    //       isLoggedIn: true,
+    //       user
+    //     }
+    //   });
+    // } catch (err) {
+    //   console.error('Authentication error:', err);
+    //   throw err;
+    // }
   };
   
   const register = async (email, password, firstName, lastName) => {
@@ -184,13 +152,12 @@ export const JWTProvider = ({ children }) => {
     dispatch({ type: LOGOUT });
   };
 
-  const resetPassword = async (email) => {
+  const sendOtp = async (email) => {
     console.log('email - ', email);
     window.localStorage.setItem('email', email);
 
     try {
       const response = await axios.post('/auth/send-OTP', { email });
-      // navigation('/auth/code-verification');
       return response.data; 
       
     } catch (error) {
@@ -203,13 +170,26 @@ export const JWTProvider = ({ children }) => {
         email,
         OTP
       });
-      // Assuming the response contains user information or token
-      setUser(response.data.user);
-      // Handle the success case, e.g., storing token or navigating
+      window.localStorage.setItem('resetToken', response.data.data.token);
       return response.data;
     } catch (error) {
       console.error('Failed to verify OTP:', error);
       throw error;
+    }
+  };
+  const resetPassword = async (newPassword,token) => {
+    try {
+      const response = await axios.post('/auth/reset-password', {
+        newPassword,
+        token
+      });
+
+      if (response.status === 200) {
+        return { success: true };
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      return { success: false, message: error.response?.data?.message || 'Failed to reset password' };
     }
   };
 
@@ -219,7 +199,7 @@ export const JWTProvider = ({ children }) => {
     return <Loader />;
   }
 
-  return <JWTContext.Provider value={{ ...state, login, authenticate_me,verifyOtp,logout, register, resetPassword, updateProfile }}>{children}</JWTContext.Provider>;
+  return <JWTContext.Provider value={{ ...state, login, authenticate_me,verifyOtp,sendOtp,logout, register, resetPassword, updateProfile, }}>{children}</JWTContext.Provider>;
 };
 
 export default JWTContext;

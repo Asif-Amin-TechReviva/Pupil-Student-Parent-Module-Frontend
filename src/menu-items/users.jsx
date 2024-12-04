@@ -15,41 +15,43 @@ const icons = {
 
 // ==============================|| MENU ITEMS - PAGES ||============================== //
 
-const Communication = {
+const users= {
   id: 'group-pages',
-  title: <FormattedMessage id="Communication" />,
+  title: <FormattedMessage id="users" />,
   type: 'group',
   children: [
     {
-      id: 'Communication',
-      title: <FormattedMessage id="Communication" />,
+      id: 'Users',
+      title: <FormattedMessage id="Users" />,
       type: 'collapse',
       icon: icons.maintenance,
       children: [
         {
-          id: 'Add Cashier',
-          title: <FormattedMessage id="Add Cashier" />,
+          id: 'Students',
+          title: <FormattedMessage id="Students" />,
           type: 'item',
-          url: '/cashier/add-cashier'
+          url: '/users/students',
           // target: true
         },
         {
-          id: 'Cashier List',
-          title: <FormattedMessage id="Cashier List" />,
+          id: 'Teachers',
+          title: <FormattedMessage id="Teachers" />,
           type: 'item',
-          url: '/cashier/cashier-list'
+          url: '/users/teachers',
           // target: true
         },
         {
-          id: 'Bulk Edit',
-          title: <FormattedMessage id="Bulk Edit" />,
-          type: 'item',
-          url: '/cashier/bulk-edit'
-          // target: true
-        }
+            id: 'Cashiers',
+            title: <FormattedMessage id="Cashiers" />,
+            type: 'item',
+            url: '/cashier/cashier-list',
+            // target: true
+          },
+          
       ]
-    }
+    },
+   
   ]
 };
 
-export default Communication;
+export default users;

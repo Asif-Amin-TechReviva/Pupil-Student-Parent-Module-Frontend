@@ -53,7 +53,7 @@ export default function AuthForgotPassword() {
                   }
                 });
                 setTimeout(() => {
-                  navigate('/auth/code-verification', { state: { isAuthenticating: true } });
+                  // navigate('/auth/code-verification', { state: { isAuthenticating: true } });
                   // navigate(isLoggedIn ? '/auth/check-mail' : '/check-mail', { replace: true });
                 }, 1500);
 
@@ -62,11 +62,11 @@ export default function AuthForgotPassword() {
                 // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
                 // github issue: https://github.com/formium/formik/issues/2430
               },
-              (err) => {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
-              }
+              // (err) => {
+              //   setStatus({ success: false });
+              //   setErrors({ submit: err.message });
+              //   setSubmitting(false);
+              // }
             );
           } catch (err) {
             console.error(err);
