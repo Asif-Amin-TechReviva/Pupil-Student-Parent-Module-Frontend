@@ -5,7 +5,7 @@ import AuthLayout from 'layout/Auth';
 import Loadable from 'components/Loadable';
 
 // render - login
-const AuthLogin = Loadable(lazy(() => import('pages/auth/auth1/login')));
+const AuthLogin = Loadable(lazy(() => import('pages/auth/auth2/login2')));
 const AuthRegister = Loadable(lazy(() => import('pages/auth/auth1/register')));
 const AuthForgotPassword = Loadable(lazy(() => import('pages/auth/auth1/forgot-password')));
 const AuthCheckMail = Loadable(lazy(() => import('pages/auth/auth1/check-mail')));

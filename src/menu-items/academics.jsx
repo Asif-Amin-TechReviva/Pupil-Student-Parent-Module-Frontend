@@ -17,7 +17,7 @@ const icons = {
 
 const Academics= {
   id: 'group-pages',
-  title: <FormattedMessage id="Academics" />,
+  // title: <FormattedMessage id="Academics" />,
   type: 'group',
   children: [
     {
@@ -27,26 +27,26 @@ const Academics= {
       icon: icons.maintenance,
       children: [
         {
-          id: 'Add Cashier',
-          title: <FormattedMessage id="Add Cashier" />,
+          id: 'View Assignments',
+          title: <FormattedMessage id="View Assignments" />,
           type: 'item',
           url: '/cashier/add-cashier',
           // target: true
         },
         {
-          id: 'Cashier List',
-          title: <FormattedMessage id="Cashier List" />,
+          id: 'Grades',
+          title: <FormattedMessage id="Grades" />,
           type: 'item',
           url: '/cashier/cashier-list',
           // target: true
         },
-        {
-          id: 'Bulk Edit',
-          title: <FormattedMessage id="Bulk Edit" />,
-          type: 'item',
-          url: '/cashier/bulk-edit',
-          // target: true
-        },
+        // {
+        //   id: 'Bulk Edit',
+        //   title: <FormattedMessage id="Bulk Edit" />,
+        //   type: 'item',
+        //   url: '/cashier/bulk-edit',
+        //   // target: true
+        // },
        
         
           

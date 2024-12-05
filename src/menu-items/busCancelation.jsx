@@ -17,7 +17,7 @@ const icons = {
 
 const BusCancellation= {
   id: 'group-pages',
-  title: <FormattedMessage id="Bus Cancellation" />,
+  // title: <FormattedMessage id="Bus Cancellation" />,
   type: 'group',
   children: [
     {

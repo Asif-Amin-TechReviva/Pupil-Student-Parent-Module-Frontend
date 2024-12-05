@@ -17,7 +17,7 @@ const icons = {
 
 const ResourceSharing= {
   id: 'group-pages',
-  title: <FormattedMessage id="Resource Sharing" />,
+  // title: <FormattedMessage id="Resource Sharing" />,
   type: 'group',
   children: [
     {

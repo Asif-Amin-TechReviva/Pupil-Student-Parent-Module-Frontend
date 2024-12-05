@@ -9,7 +9,7 @@ import ComponentsRoutes from './ComponentsRoutes';
 import { SimpleLayoutType } from 'config';
 import SimpleLayout from 'layout/Simple';
 import Loadable from 'components/Loadable';
-
+import { Navigate } from 'react-router-dom';
 // render - landing page
 const PagesLanding = Loadable(lazy(() => import('pages/landing')));
 
@@ -17,15 +17,19 @@ const PagesLanding = Loadable(lazy(() => import('pages/landing')));
 
 const router = createBrowserRouter(
   [
+    // {
+    //   path: '/',
+    //   element: <SimpleLayout layout={SimpleLayoutType.LANDING} />,
+    //   children: [
+    //     {
+    //       index: true,
+    //       element: <PagesLanding />
+    //     }
+    //   ]
+    // },
     {
-      path: '/',
-      element: <SimpleLayout layout={SimpleLayoutType.LANDING} />,
-      children: [
-        {
-          index: true,
-          element: <PagesLanding />
-        }
-      ]
+path:'/',
+element:<Navigate to ="/login" replace />
     },
     LoginRoutes,
     ComponentsRoutes,

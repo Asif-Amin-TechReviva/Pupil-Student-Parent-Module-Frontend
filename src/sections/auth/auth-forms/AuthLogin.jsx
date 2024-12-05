@@ -72,7 +72,7 @@ export default function AuthLogin({ forgot }) {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="schoolId-login">schoolId Address</InputLabel>
+                  <InputLabel htmlFor="schoolId-login">School Id</InputLabel>
                   <OutlinedInput
                     id="schoolId-login"
                     type="schoolId"

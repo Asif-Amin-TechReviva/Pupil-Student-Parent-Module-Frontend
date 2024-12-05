@@ -17,7 +17,7 @@ const icons = {
 
 const Fee= {
   id: 'group-pages',
-  title: <FormattedMessage id="Fee" />,
+  // title: <FormattedMessage id="Fee" />,
   type: 'group',
   children: [
     {

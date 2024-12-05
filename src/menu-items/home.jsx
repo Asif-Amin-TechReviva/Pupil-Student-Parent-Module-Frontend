@@ -19,15 +19,17 @@ const Home= {
   id: 'group-pages',
   title: <FormattedMessage id="Home" />,
   type: 'group',
-  children: [
-    {
-      id: 'Home',
-      title: <FormattedMessage id="Home" />,
-      type: 'collapse',
-      icon: icons.maintenance,
-    },
+  url: '/cashier/add-cashier',
+  icon: icons.maintenance,
+  // children: [
+  //   {
+  //     id: 'Home',
+  //     title: <FormattedMessage id="Home" />,
+  //     type: 'collapse',
+  //     icon: icons.maintenance,
+  //   },
    
-  ]
+  // ]
 };
 
 export default Home;
