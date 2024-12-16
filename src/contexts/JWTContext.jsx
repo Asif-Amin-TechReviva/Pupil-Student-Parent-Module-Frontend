@@ -12,7 +12,7 @@ const chance = new Chance();
 const initialState = {
   isLoggedIn: false,
   isInitialized: false,
-  user: null
+  user:null
 };
 
 const verifyToken = (accessToken) => {
@@ -83,12 +83,15 @@ export const JWTProvider = ({ children }) => {
       });
       const accessToken= response.data.data.accessToken;
       const user= response.data.data.user;
+      const id= response.data.data.user.id;
+      console.log("getting student id after login",id)
+      localStorage.setItem('studentId', id);
       setSession(accessToken);
       dispatch({
         type: LOGIN,
         payload: {
           isLoggedIn: true,
-          user
+          user,
 
         }
       });

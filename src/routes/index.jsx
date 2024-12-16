@@ -29,7 +29,7 @@ const router = createBrowserRouter(
     // },
     {
 path:'/',
-element:<Navigate to ="/login" replace />
+element:<Navigate to ="/dashboard/default" replace />
     },
     LoginRoutes,
     ComponentsRoutes,

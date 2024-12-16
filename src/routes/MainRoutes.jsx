@@ -9,6 +9,7 @@ import SimpleLayout from 'layout/Simple';
 
 import { SimpleLayoutType } from 'config';
 import { loader as productsLoader, productLoader } from 'api/products';
+import { element } from 'prop-types';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/default')));
@@ -20,6 +21,9 @@ const WidgetData = Loadable(lazy(() => import('pages/widget/data')));
 const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 
 // render - applications
+import PaymentTable from 'pages/Parent/paymentTable';
+import Assignments from 'pages/Parent/assignments';
+import Grades from 'pages/Parent/grades';
 const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 const AppCalendar = Loadable(lazy(() => import('pages/apps/calendar')));
 
@@ -154,6 +158,32 @@ const MainRoutes = {
               element: <DashboardAnalytics />
             }
           ]
+        },
+        {
+          path: 'fee',
+          children:[
+            {
+            path:'all-payments',
+            element:<PaymentTable />
+          },
+          {
+          path:'pay-fee',
+          element:<PaymentTable/>
+          }
+        ]
+        },
+        {
+          path: 'academics',
+          children:[
+            {
+            path:'view-assignments',
+            element:<Assignments />
+          },
+          {
+          path:'view-grades',
+          element:<Grades/>
+          }
+        ]
         },
         {
           path: 'widget',

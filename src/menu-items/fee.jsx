@@ -2,7 +2,7 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import { I24Support, MessageProgramming } from 'iconsax-react';
+import { I24Support, MessageProgramming ,Bank} from 'iconsax-react';
 
 // type
 
@@ -10,46 +10,30 @@ import { I24Support, MessageProgramming } from 'iconsax-react';
 // icons
 const icons = {
   maintenance: MessageProgramming,
-  contactus: I24Support
+  contactus: I24Support,
+  bank : Bank
 };
 
 // ==============================|| MENU ITEMS - PAGES ||============================== //
 
 const Fee= {
   id: 'group-pages',
-  // title: <FormattedMessage id="Fee" />,
+  // title: <FormattedMessage id="fee" />,
   type: 'group',
   children: [
     {
-      id: 'Fee',
-      title: <FormattedMessage id="Fee" />,
+      id: 'fee',
+      title: <FormattedMessage id="fee" />,
       type: 'collapse',
-      icon: icons.maintenance,
+      icon: icons.bank,
       children: [
         {
-          id: 'Add Cashier',
-          title: <FormattedMessage id="Add Cashier" />,
+          id: 'Fee-Enquiry',
+          title: <FormattedMessage id="All-Payments" />,
           type: 'item',
-          url: '/cashier/add-cashier',
+          url: '/fee/all-payments',
           // target: true
-        },
-        {
-          id: 'Cashier List',
-          title: <FormattedMessage id="Cashier List" />,
-          type: 'item',
-          url: '/cashier/cashier-list',
-          // target: true
-        },
-        {
-          id: 'Bulk Edit',
-          title: <FormattedMessage id="Bulk Edit" />,
-          type: 'item',
-          url: '/cashier/bulk-edit',
-          // target: true
-        },
-       
-        
-          
+        },   
       ]
     },
    

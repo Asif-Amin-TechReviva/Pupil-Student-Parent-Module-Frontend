@@ -51,8 +51,8 @@ export default function AuthLogin({ forgot }) {
     <>
       <Formik
         initialValues={{
-          email: 'info@phoenixcoded.co',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -172,7 +172,7 @@ export default function AuthLogin({ forgot }) {
                         <>
                           <Link href="#" onClick={verificationHandler} color="error" sx={{ fontWeight: 700 }}>
                             Click me
-                          </Link>{' '}
+                          </Link>{''}
                           for user verification
                         </>
                       )}

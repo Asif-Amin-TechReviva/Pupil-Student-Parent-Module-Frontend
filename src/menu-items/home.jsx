@@ -19,7 +19,7 @@ const Home= {
   id: 'group-pages',
   title: <FormattedMessage id="Home" />,
   type: 'group',
-  url: '/cashier/add-cashier',
+  url: '/dashboard/default',
   icon: icons.maintenance,
   // children: [
   //   {

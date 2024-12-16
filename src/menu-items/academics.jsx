@@ -30,14 +30,14 @@ const Academics= {
           id: 'View Assignments',
           title: <FormattedMessage id="View Assignments" />,
           type: 'item',
-          url: '/cashier/add-cashier',
+          url: '/academics/view-assignments',
           // target: true
         },
         {
           id: 'Grades',
-          title: <FormattedMessage id="Grades" />,
+          title: <FormattedMessage id="View Grades" />,
           type: 'item',
-          url: '/cashier/cashier-list',
+          url: '/academics/view-grades',
           // target: true
         },
         // {
