@@ -6,12 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CSVExport, DebouncedInput, EmptyTable } from 'components/third-party/react-table';
-import {  Grid } from "@mui/material";
-import EcommerceDataCard from 'components/cards/statistics/EcommerceDataCard';
-import EcommerceDataChart from "sections/widget/chart/EcommerceDataChart";
-import { ArrowDown, ArrowUp, Book, Calendar, CloudChange, Wallet3 } from 'iconsax-react';
 
 import { useTheme } from '@mui/material/styles';
 // third-party
@@ -24,6 +19,7 @@ import {
 } from '@tanstack/react-table';
 import { FetchPaymentDetails } from 'api/allPayments';
 import { useState, useEffect, useMemo } from 'react';
+import QuichLinks from 'components/QuichLinks';
 
 // Utility functions
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -100,68 +96,8 @@ const theme = useTheme()
   }));
 
   return (
-    <div>
-       <Grid container spacing={3} >
-  <Grid item xs={12} sm={6} md={3}>
-    <EcommerceDataCard
-      title="All Earnings"
-      count="$3000"
-      iconPrimary={<Wallet3 />}
-      percentage={
-        <Typography color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-        </Typography>
-      }
-    >
-      <EcommerceDataChart color={theme.palette.primary.main} />
-    </EcommerceDataCard>
-  </Grid>
-  <Grid item xs={12} sm={6} md={3}>
-    <EcommerceDataCard
-      title="Page Views"
-      count="290+"
-      color="warning"
-      iconPrimary={<Book color={theme.palette.warning.dark} />}
-      percentage={
-        <Typography color="warning.dark" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <ArrowDown size={16} style={{ transform: 'rotate(-45deg)' }} /> 30.6%
-        </Typography>
-      }
-    >
-      <EcommerceDataChart color={theme.palette.warning.dark} />
-    </EcommerceDataCard>
-  </Grid>
-  <Grid item xs={12} sm={6} md={3}>
-    <EcommerceDataCard
-      title="Total task"
-      count="1,568"
-      color="success"
-      iconPrimary={<Calendar color={theme.palette.success.darker} />}
-      percentage={
-        <Typography color="success.darker" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-        </Typography>
-      }
-    >
-      <EcommerceDataChart color={theme.palette.success.darker} />
-    </EcommerceDataCard>
-  </Grid>
-  <Grid item xs={12} sm={6} md={3}>
-    <EcommerceDataCard
-      title="Download"
-      count="$200"
-      color="error"
-      iconPrimary={<CloudChange color={theme.palette.error.dark} />}
-      percentage={
-        <Typography color="error.dark" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <ArrowDown size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-        </Typography>
-      }
-    >
-      <EcommerceDataChart color={theme.palette.error.dark} />
-    </EcommerceDataCard>
-  </Grid>
-</Grid>
+    <>
+    <QuichLinks/>
     <Paper>
       <Stack mt={3} direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ padding: 2 }}>
         <DebouncedInput
@@ -217,7 +153,8 @@ const theme = useTheme()
         </Table>
       </TableContainer>
     </Paper>
-    </div>
+    </>
+
   );
 };
 
