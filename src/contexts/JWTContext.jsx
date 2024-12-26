@@ -33,7 +33,8 @@ const setSession = (accessToken) => {
   }
 };
 
-const JWTContext = createContext(null);
+export const JWTContext = createContext(null);
+
 
 export const JWTProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -75,33 +76,69 @@ export const JWTProvider = ({ children }) => {
  
   
 
+  // const login = async (schoolId, password) => {
+  //   try {
+  //     const response = await axios.post('/student/login', {
+  //       schoolId,
+  //       password
+  //     });
+  //     const accessToken= response.data.data.accessToken;
+  //     const user= response.data.data.user;
+  //     const id= response.data.data.user.id;
+  //     console.log("getting student id after login",id)
+  //     localStorage.setItem('studentId', id);
+  //     setSession(accessToken);
+  //     dispatch({
+  //       type: LOGIN,
+  //       payload: {
+  //         isLoggedIn: true,
+  //         user,
+
+  //       }
+  //     });
+  //     console.log(user)
+
+  //   } catch (err) {
+  //     console.error('Login error:', err);
+  //     throw err;
+  //   }
+  // };
+
+
   const login = async (schoolId, password) => {
     try {
       const response = await axios.post('/student/login', {
         schoolId,
         password
       });
-      const accessToken= response.data.data.accessToken;
-      const user= response.data.data.user;
-      const id= response.data.data.user.id;
-      console.log("getting student id after login",id)
-      localStorage.setItem('studentId', id);
+  
+      const accessToken = response.data.data.accessToken;
+      const user = response.data.data.user;
+      const id = response.data.data.user.id;
+  
+      console.log("getting student id after login", id);
+  
+      // Save data to sessionStorage
+      sessionStorage.setItem('studentId', id);
+      sessionStorage.setItem('user', JSON.stringify(user));  // Save user data in sessionStorage
+  
       setSession(accessToken);
       dispatch({
         type: LOGIN,
         payload: {
           isLoggedIn: true,
           user,
-
         }
       });
-
+  
+      console.log(user);
+  
     } catch (err) {
       console.error('Login error:', err);
       throw err;
     }
   };
-
+  
   const authenticate_me = async (userId, OTP) => {
     // try {
     //   const response = await axios.post('/auth/authenticate-admin', {

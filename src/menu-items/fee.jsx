@@ -23,13 +23,13 @@ const Fee= {
   children: [
     {
       id: 'fee',
-      title: <FormattedMessage id="fee" />,
+      title: <FormattedMessage id="Fee" />,
       type: 'collapse',
       icon: icons.bank,
       children: [
         {
           id: 'Fee-Enquiry',
-          title: <FormattedMessage id="All-Payments" />,
+          title: <FormattedMessage id="Payments" />,
           type: 'item',
           url: '/fee/all-payments',
           // target: true
