@@ -157,7 +157,20 @@ const Assignments = () => {
           />
         </>
       ) : (
+        <>
         <p>No {activeTab === 'ongoing' ? 'ongoing' : 'previous'} assignments found.</p>
+        <Pagination
+            page={page}
+            setPage={setPage}
+            take={take}
+            totalRows={totalAssignments}
+            pageCount={Math.ceil(totalAssignments / take)}
+            onPageChange={(newPage, rowsPerPage) => {
+              setPage(newPage);
+              setTake(rowsPerPage);
+            }}
+          />
+</>
       )}
     </div>
   );

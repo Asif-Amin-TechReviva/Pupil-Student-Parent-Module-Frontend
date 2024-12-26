@@ -24,9 +24,6 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 import PaymentTable from 'pages/Parent/paymentTable';
 import Assignments from 'pages/Parent/assignments';
 import Grades from 'pages/Parent/grades';
-import TablePagination from 'themes/overrides/TablePagination';
-import Pagination from 'components/Pagination';
-import CardList from 'components/CardList';
 const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 const AppCalendar = Loadable(lazy(() => import('pages/apps/calendar')));
 
@@ -167,14 +164,9 @@ const MainRoutes = {
           children:[
             {
             path:'all-payments',
-            element:<CardList />
+            element:<PaymentTable />
           },
-          // {
-          // path:'pay-fee',
-          // element:<StickyHeadTable/>
-          // // element:<PaymentTable/>
-          
-          // }
+         
         ]
         },
         {
