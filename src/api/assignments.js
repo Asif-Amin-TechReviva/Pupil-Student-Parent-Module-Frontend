@@ -1,7 +1,7 @@
 import axiosServices from 'utils/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-export const FetchAllAssignments = async (page = 1, take = '25', searchQuery = '', sortOrder = 'asc') => {
+export const FetchAllAssignments = async (page = 1, take = '25', searchQuery = '', sortOrder = 'desc') => {
   try {
     let api = `/assignments?page=${page}&take=${take}&sortOrder=${sortOrder}`;
 
