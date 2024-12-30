@@ -233,13 +233,41 @@ export const JWTProvider = ({ children }) => {
     }
   };
 
+  const changePassword = async (currentPassword, newPassword) => {
+    try {
+      const response = await axios.post('/auth/change-password', {
+        currentPassword,
+        newPassword
+      });
+  
+      // Check if the response indicates success
+      if (response.data.success) {
+        return { success: true, message: response.data.message }; // Password changed successfully
+      } else {
+        // Handle if success is false (even though this may not happen here)
+        return { success: false, message: response.data.message || 'Failed to change password' };
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      
+      // Handle error cases (e.g., incorrect current password)
+      const errorMessage = 
+        error.response?.data?.message || error.message || 'Failed to change password';
+      
+      return { success: false, message: errorMessage }; // Return failure with error message
+    }
+  };
+  
+  
+  
+  
   const updateProfile = () => {};
 
   if (state.isInitialized !== undefined && !state.isInitialized) {
     return <Loader />;
   }
 
-  return <JWTContext.Provider value={{ ...state, login, authenticate_me,verifyOtp,sendOtp,logout, register, resetPassword, updateProfile, }}>{children}</JWTContext.Provider>;
+  return <JWTContext.Provider value={{ ...state, login, authenticate_me,verifyOtp,sendOtp,logout, register, resetPassword, updateProfile, changePassword}}>{children}</JWTContext.Provider>;
 };
 
 export default JWTContext;
