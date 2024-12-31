@@ -76,6 +76,31 @@ const Assignments = () => {
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
+  const handleDownload = (url, title) => {
+    if (url) {
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch the attachment');
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = title || 'attachment';
+          link.click();
+          window.URL.revokeObjectURL(downloadUrl);
+        })
+        .catch((error) => {
+          console.error('Download failed:', error);
+          toast.error('Failed to download attachment.');
+        });
+    } else {
+      toast.error('No attachment available.');
+    }
+  };
 
   return (
     <div>
@@ -133,7 +158,7 @@ const Assignments = () => {
                       Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
                     </Typography>
                     <Typography variant="body1" sx={{ marginTop: 2 }}>
-                      {truncateText(assignment.description, 200)}
+                      {truncateText(assignment.description, 500)}
                     </Typography>
 
                     <Box
@@ -148,60 +173,30 @@ const Assignments = () => {
                         Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
                       </Typography>
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-                        {/* <Button
+                        <Button
                           variant="contained"
                           color="primary"
-                          sx={{ borderRadius: 20, textTransform: 'none' }}
-                          onClick={() => {
-                            if (assignment.attachmentUrl) {
-                              const anchor = document.createElement('a');
-                              anchor.href = assignment.attachmentUrl;
-                              anchor.setAttribute('download', assignment.title || 'attachment');
-                              document.body.appendChild(anchor);
-                              anchor.click();
-                              document.body.removeChild(anchor);
-                            } else {
-                              toast.error('No attachment available.');
+                          startIcon={<CloudDownloadIcon />}
+                          onClick={() => handleDownload(assignment.attachmentUrl, assignment.title)}
+                          sx={{
+                            padding: '0.75rem 1.5rem',
+                            fontWeight: 'bold',
+                            backgroundColor: '#1976D2',
+                            '&:hover': {
+                              backgroundColor: '#1565C0'
                             }
                           }}
                         >
                           Download
-                        </Button> */}
-
-<Button
-  variant="contained"
-  color="primary"
-  startIcon={<CloudDownloadIcon />}
-  onClick={() => {
-    if (selectedAssignment?.attachmentUrl) {
-      const link = document.createElement('a');
-      link.href = selectedAssignment.attachmentUrl;
-      link.download = selectedAssignment.title || 'attachment';  // Ensure title is provided for the filename
-      link.style.display = 'none';  // Hide the link
-      document.body.appendChild(link);  // Append the link to the document
-      link.click();  // Trigger the download
-      document.body.removeChild(link);  // Clean up the DOM after download
-    } else {
-      toast.error('No attachment available.');
-    }
-  }}
-  sx={{
-    padding: '0.75rem 1.5rem',
-    fontWeight: 'bold',
-    backgroundColor: '#1976D2',
-    '&:hover': {
-      backgroundColor: '#1565C0'
-    }
-  }}
->
-  Download
-</Button>
+                        </Button>
 
                         <Button
                           variant="outlined"
-                          color="secondary"
-                          sx={{ borderRadius: 20, textTransform: 'none', marginLeft: 2 }}
+                          color="success"
+                          backgroundColor= '#1976D2'
+                          sx={{ borderRadius: 1, textTransform: 'none', marginLeft: 2 }}
                           onClick={() => handleOpenModal(assignment.id)}
+                          
                         >
                           View More
                         </Button>
@@ -241,7 +236,7 @@ const Assignments = () => {
           >
             Assignment Details
           </DialogTitle>
-          <Button
+          <Button  
             onClick={handleCloseModal}
             color="error"
             variant="outlined"
@@ -251,6 +246,7 @@ const Assignments = () => {
             }}
           >
             Close
+
           </Button>
         </Box>
 
@@ -278,7 +274,7 @@ const Assignments = () => {
                 </Typography>
 
                 {/* Assignment Description */}
-                <Typography variant="body1" paragraph sx={{ lineHeight: 1.6, color: '#555' }}>
+                <Typography variant="body6" paragraph sx={{ lineHeight: 1.6, color: '#555' }}>
                   {selectedAssignment.description}
                 </Typography>
 
@@ -286,10 +282,10 @@ const Assignments = () => {
 
                 {/* Date Information */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body3" color="text.primary">
                     Created At: {new Date(selectedAssignment.createdAt).toLocaleDateString()}
                   </Typography>
-                  <Typography variant="body2" color="error">
+                  <Typography variant="body3" color="error">
                     Due Date: {new Date(selectedAssignment.dueDate).toLocaleDateString()}
                   </Typography>
                 </Box>
@@ -322,12 +318,7 @@ const Assignments = () => {
               variant="contained"
               color="primary"
               startIcon={<CloudDownloadIcon />}
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = selectedAssignment.attachmentUrl;
-                link.download = selectedAssignment.title || 'attachment';
-                link.click(); // Direct download without redirecting
-              }}
+              onClick={() => handleDownload(selectedAssignment.attachmentUrl, selectedAssignment.title)}
               sx={{
                 padding: '0.75rem 1.5rem',
                 fontWeight: 'bold',
