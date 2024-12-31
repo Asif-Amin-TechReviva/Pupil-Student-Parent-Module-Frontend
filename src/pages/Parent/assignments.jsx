@@ -1,190 +1,10 @@
-// import React, { useState, useEffect } from 'react';
-// import { FetchAllAssignments } from 'api/assignments';
-// import { toast } from 'react-toastify';
-// import { Card, CardContent, Typography, Box, Button, Grid } from '@mui/material';
-// import { useTheme } from '@mui/material/styles';
-// import QuichLinks from 'components/QuichLinks';
-// import SwitchButton from 'components/SwitchButton';
-// import Pagination from 'components/Pagination';
-// const Assignments = () => {
-//   const theme = useTheme();
-//   const [assignments, setAssignments] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [activeTab, setActiveTab] = useState('ongoing');
-//   const [page, setPage] = useState(0);
-//   const [take, setTake] = useState(10);
-//   const [totalAssignments, setTotalAssignments] = useState(0);
-
-//   const today = new Date();
-
-//   useEffect(() => {
-//     const fetchAssignments = async () => {
-//       try {
-//         setLoading(true);
-//         const data = await FetchAllAssignments();
-//         const allAssignments = data.data.data;
-
-//         setTotalAssignments(allAssignments.length);
-
-//         const paginatedAssignments = allAssignments.slice(page * take, (page + 1) * take);
-
-//         const ongoing = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) >= today);
-
-//         const ended = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) < today);
-
-//         setAssignments({ ongoing, ended });
-//       } catch (error) {
-//         console.error('Error fetching assignments:', error);
-//         toast.error('Unable to fetch assignments. Please try again.');
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchAssignments();
-//   }, [page, take]);
-
-//   const { ongoing, ended } = assignments;
-
-//   return (
-//     <div>
-//       <QuichLinks />
-//       <SwitchButton activeTab={activeTab} setActiveTab={setActiveTab} />
-
-//       {loading ? (
-//         <p>Loading...</p>
-//       ) : (activeTab === 'ongoing' ? ongoing : ended).length > 0 ? (
-//         <>
-//           <Grid container spacing={3}>
-//             {(activeTab === 'ongoing' ? ongoing : ended).map((assignment) => (
-//               <Grid item xs={12} sm={6} md={6} key={assignment.id}>
-//                 <Card
-//                   variant="outlined"
-//                   sx={{
-//                     borderRadius: 2,
-//                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-//                     position: 'relative',
-//                     height: '100%',
-//                     display: 'flex',
-//                     flexDirection: 'column'
-//                   }}
-//                 >
-//                   <Box
-//                     sx={{
-//                       position: 'absolute',
-//                       top: 16,
-//                       right: 16,
-//                       backgroundColor: '#FFA726',
-//                       color: '#fff',
-//                       padding: '4px 12px',
-//                       borderRadius: '12px',
-//                       fontWeight: 'bold'
-//                     }}
-//                   >
-//                     {assignment.subject.name}
-//                   </Box>
-
-//                   <CardContent
-//                     sx={{
-//                       flex: '1 1 auto',
-//                       display: 'flex',
-//                       flexDirection: 'column',
-//                       justifyContent: 'space-between'
-//                     }}
-//                   >
-//                     <Typography variant="h4" fontWeight="bold" gutterBottom>
-//                       {assignment.title}
-//                     </Typography>
-//                     <Typography variant="body1" fontWeight="bold" gutterBottom>
-//                       Assigned by: {`${assignment.addedBy.user.firstName} ${assignment.addedBy.user.lastName}`}
-//                     </Typography>
-//                     <Typography variant="body2" color="text.secondary" gutterBottom>
-//                       Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
-//                     </Typography>
-//                     <Typography variant="body1" sx={{ marginTop: 2 }}>
-//                       {assignment.description}
-//                     </Typography>
-
-//                     <Box
-//                       sx={{
-//                         marginTop: 'auto',
-//                         display: 'flex',
-//                         justifyContent: 'space-between',
-//                         alignItems: 'baseline'
-//                       }}
-//                     >
-//                       <Typography variant="body2" color="textSecondary" gutterBottom>
-//                         Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
-//                       </Typography>
-//                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-//                         <Button
-//                           variant="contained"
-//                           color="primary"
-//                           sx={{ borderRadius: 20, textTransform: 'none' }}
-//                           onClick={() => {
-//                             if (assignment.attachmentUrl) {
-//                               const anchor = document.createElement('a');
-//                               anchor.href = assignment.attachmentUrl;
-//                               anchor.setAttribute('download', assignment.title || 'attachment');
-//                               document.body.appendChild(anchor);
-//                               anchor.click();
-//                               document.body.removeChild(anchor);
-//                             } else {
-//                               toast.error('No attachment available.');
-//                             }
-//                           }}
-//                         >
-//                           Download
-//                         </Button>
-//                       </Box>
-//                     </Box>
-//                   </CardContent>
-//                 </Card>
-//               </Grid>
-//             ))}
-//           </Grid>
-
-//           <Pagination
-//             page={page}
-//             setPage={setPage}
-//             take={take}
-//             totalRows={totalAssignments}
-//             pageCount={Math.ceil(totalAssignments / take)}
-//             onPageChange={(newPage, rowsPerPage) => {
-//               setPage(newPage);
-//               setTake(rowsPerPage);
-//             }}
-//           />
-//         </>
-//       ) : (
-//         <>
-//         <p>No {activeTab === 'ongoing' ? 'ongoing' : 'previous'} assignments found.</p>
-//         <Pagination
-//             page={page}
-//             setPage={setPage}
-//             take={take}
-//             totalRows={totalAssignments}
-//             pageCount={Math.ceil(totalAssignments / take)}
-//             onPageChange={(newPage, rowsPerPage) => {
-//               setPage(newPage);
-//               setTake(rowsPerPage);
-//             }}
-//           />
-// </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Assignments;
-
-
-
-
 import React, { useState, useEffect } from 'react';
-import { FetchAllAssignments } from 'api/assignments';
+import { FetchAllAssignments, FetchAssignmentDetails } from 'api/assignments';
 import { toast } from 'react-toastify';
 import { Card, CardContent, Typography, Box, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { useTheme } from '@mui/material/styles';
 import QuichLinks from 'components/QuichLinks';
 import SwitchButton from 'components/SwitchButton';
@@ -198,8 +18,9 @@ const Assignments = () => {
   const [page, setPage] = useState(0);
   const [take, setTake] = useState(10);
   const [totalAssignments, setTotalAssignments] = useState(0);
-  const [openModal, setOpenModal] = useState(false); // For Modal
-  const [selectedAssignment, setSelectedAssignment] = useState(null); // For selected assignment
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [modalLoading, setModalLoading] = useState(false);
 
   const today = new Date();
 
@@ -232,15 +53,28 @@ const Assignments = () => {
 
   const { ongoing, ended } = assignments;
 
-  // Handle View More Modal
-  const handleOpenModal = (assignment) => {
-    setSelectedAssignment(assignment);
-    setOpenModal(true);
+  const handleOpenModal = async (assignmentId) => {
+    try {
+      setModalLoading(true);
+      setOpenModal(true);
+      const response = await FetchAssignmentDetails(assignmentId);
+      setSelectedAssignment(response);
+    } catch (error) {
+      console.error('Failed to fetch assignment details:', error);
+      toast.error('Failed to load assignment details.');
+      setOpenModal(false);
+    } finally {
+      setModalLoading(false);
+    }
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedAssignment(null);
+  };
+
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
 
   return (
@@ -299,7 +133,7 @@ const Assignments = () => {
                       Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
                     </Typography>
                     <Typography variant="body1" sx={{ marginTop: 2 }}>
-                      {assignment.description}
+                      {truncateText(assignment.description, 200)}
                     </Typography>
 
                     <Box
@@ -314,7 +148,7 @@ const Assignments = () => {
                         Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
                       </Typography>
                       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-                        <Button
+                        {/* <Button
                           variant="contained"
                           color="primary"
                           sx={{ borderRadius: 20, textTransform: 'none' }}
@@ -332,13 +166,42 @@ const Assignments = () => {
                           }}
                         >
                           Download
-                        </Button>
-                        {/* View More Button */}
+                        </Button> */}
+
+<Button
+  variant="contained"
+  color="primary"
+  startIcon={<CloudDownloadIcon />}
+  onClick={() => {
+    if (selectedAssignment?.attachmentUrl) {
+      const link = document.createElement('a');
+      link.href = selectedAssignment.attachmentUrl;
+      link.download = selectedAssignment.title || 'attachment';  // Ensure title is provided for the filename
+      link.style.display = 'none';  // Hide the link
+      document.body.appendChild(link);  // Append the link to the document
+      link.click();  // Trigger the download
+      document.body.removeChild(link);  // Clean up the DOM after download
+    } else {
+      toast.error('No attachment available.');
+    }
+  }}
+  sx={{
+    padding: '0.75rem 1.5rem',
+    fontWeight: 'bold',
+    backgroundColor: '#1976D2',
+    '&:hover': {
+      backgroundColor: '#1565C0'
+    }
+  }}
+>
+  Download
+</Button>
+
                         <Button
                           variant="outlined"
                           color="secondary"
                           sx={{ borderRadius: 20, textTransform: 'none', marginLeft: 2 }}
-                          onClick={() => handleOpenModal(assignment)} // Open Modal with assignment details
+                          onClick={() => handleOpenModal(assignment.id)}
                         >
                           View More
                         </Button>
@@ -363,94 +226,124 @@ const Assignments = () => {
           />
         </>
       ) : (
-        <>
-          <p>No {activeTab === 'ongoing' ? 'ongoing' : 'previous'} assignments found.</p>
-          <Pagination
-            page={page}
-            setPage={setPage}
-            take={take}
-            totalRows={totalAssignments}
-            pageCount={Math.ceil(totalAssignments / take)}
-            onPageChange={(newPage, rowsPerPage) => {
-              setPage(newPage);
-              setTake(rowsPerPage);
-            }}
-          />
-        </>
+        <p>No assignments found.</p>
       )}
-<Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
-  <DialogTitle>
-    <Box display="flex" justifyContent="space-between" alignItems="center">
-      <Typography variant="h3" fontWeight="bold">
-        Assignment Details
-      </Typography>
-      <Button onClick={handleCloseModal} color="error" size="small" variant="outlined">
-        Close
-      </Button>
-    </Box>
-  </DialogTitle>
-  <DialogContent>
-    {selectedAssignment && (
-      <Box display="flex" flexDirection="column" gap={3}>
-        <Box>
-          <Typography variant="h4" fontWeight="bold" gutterBottom>
-            {selectedAssignment.title}
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {selectedAssignment.description}
-          </Typography>
+
+      <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
+        <Box display="flex" justifyContent="space-between" alignItems="baseline" sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}>
+          <DialogTitle
+            sx={{
+              fontWeight: 'bold',
+              fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Smaller font size on small screens
+              color: '#1976D2',
+              flexGrow: 1
+            }}
+          >
+            Assignment Details
+          </DialogTitle>
+          <Button
+            onClick={handleCloseModal}
+            color="error"
+            variant="outlined"
+            sx={{
+              padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' }, // Smaller button padding on small screens
+              fontSize: { xs: '0.875rem', sm: '1rem' } // Smaller font size on small screens
+            }}
+          >
+            Close
+          </Button>
         </Box>
 
-        <Box display="flex" justifyContent="space-between">
-          <Typography variant="body1" color="text.secondary" fontWeight="bold">
-            Assigned By: {`${selectedAssignment.addedBy.user.firstName} ${selectedAssignment.addedBy.user.lastName}`}
-          </Typography>
-          <Typography variant="body1" color="text.secondary"fontWeight="bold">
-            Assigned On: {new Date(selectedAssignment.addedBy.createdAt).toLocaleDateString()}
-          </Typography>
-        </Box>
-
-        {selectedAssignment.attachmentUrl && (
-          <Box display="flex" justifyContent="center" marginTop={2}>
-            <img
-              src={selectedAssignment.attachmentUrl}
-              alt="Attachment"
-              style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'cover', borderRadius: 8 }}
-            />
-          </Box>
-        )}
-      </Box>
-    )}
-  </DialogContent>
-  <DialogActions>
-    <Box display="flex" justifyContent="space-between" width="100%">
-      <Typography variant="body1" color="text.secondary">
-        Due Date: {selectedAssignment && new Date(selectedAssignment.dueDate).toLocaleDateString()}
-      </Typography>
-      {selectedAssignment?.attachmentUrl && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            const anchor = document.createElement('a');
-            anchor.href = selectedAssignment.attachmentUrl;
-            anchor.setAttribute('download', selectedAssignment.title || 'attachment');
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+        <DialogContent
+          sx={{
+            padding: '2rem',
+            backgroundColor: '#f9f9f9',
+            overflowY: 'auto', // Allows scrolling when content overflows
+            maxHeight: '70vh',
+            scrollbarWidth: '4px',
+            msOverflowStyle: 'none', // Hide scrollbar in Internet Explorer
+            '&::-webkit-scrollbar': { display: 'none' } // Hide scrollbar in Webkit-based browsers
           }}
         >
-          Download Attachment
-        </Button>
-      )}
-    </Box>
-  </DialogActions>
-</Dialog>
+          {modalLoading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height={200}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            selectedAssignment && (
+              <Box>
+                {/* Assignment Title */}
+                <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ textAlign: 'center', color: '#333', paddingTop: '15px' }}>
+                  {selectedAssignment.title}
+                </Typography>
 
+                {/* Assignment Description */}
+                <Typography variant="body1" paragraph sx={{ lineHeight: 1.6, color: '#555' }}>
+                  {selectedAssignment.description}
+                </Typography>
+
+                <Divider sx={{ my: 3, borderColor: '#1976D2' }} />
+
+                {/* Date Information */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Created At: {new Date(selectedAssignment.createdAt).toLocaleDateString()}
+                  </Typography>
+                  <Typography variant="body2" color="error">
+                    Due Date: {new Date(selectedAssignment.dueDate).toLocaleDateString()}
+                  </Typography>
+                </Box>
+
+                {/* Attachment Image */}
+                {selectedAssignment.attachmentUrl && (
+                  <Box mt={3} textAlign="center" mb={3}>
+                    <img
+                      src={selectedAssignment.attachmentUrl}
+                      alt="Attachment"
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '400px',
+                        borderRadius: 8,
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                        objectFit: 'contain'
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
+            )
+          )}
+        </DialogContent>
+
+        {/* Dialog Actions */}
+        <DialogActions sx={{ padding: '1rem 2rem' }}>
+          {selectedAssignment?.attachmentUrl && (
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<CloudDownloadIcon />}
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = selectedAssignment.attachmentUrl;
+                link.download = selectedAssignment.title || 'attachment';
+                link.click(); // Direct download without redirecting
+              }}
+              sx={{
+                padding: '0.75rem 1.5rem',
+                fontWeight: 'bold',
+                backgroundColor: '#1976D2',
+                '&:hover': {
+                  backgroundColor: '#1565C0'
+                }
+              }}
+            >
+              Download
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
 export default Assignments;
-
-

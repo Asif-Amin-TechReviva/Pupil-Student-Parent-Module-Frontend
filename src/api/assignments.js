@@ -17,3 +17,15 @@ export const FetchAllAssignments = async (page = 1, take = '25', searchQuery = '
     throw e;
   }
 };
+export const FetchAssignmentDetails = async (assignmentId) => {
+  try {
+    const api = `/assignments/${assignmentId}`;
+    const response = await axiosServices.get(api);
+
+    return response.data.data;
+  } catch (e) {
+    console.error('Error fetching assignment details:', e);
+    toast.error(e.response?.data?.message || 'Failed to fetch assignment details');
+    throw e;
+  }
+};
