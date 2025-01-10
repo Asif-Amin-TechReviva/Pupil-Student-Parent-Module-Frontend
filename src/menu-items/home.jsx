@@ -12,24 +12,13 @@ const icons = {
   maintenance: MessageProgramming,
   contactus: I24Support
 };
-
 // ==============================|| MENU ITEMS - PAGES ||============================== //
-
 const Home= {
   id: 'group-pages',
-  title: <FormattedMessage id="Home" />,
+  title: <FormattedMessage id="Dashboard" />,
   type: 'group',
   url: '/dashboard/default',
   icon: icons.maintenance,
-  // children: [
-  //   {
-  //     id: 'Home',
-  //     title: <FormattedMessage id="Home" />,
-  //     type: 'collapse',
-  //     icon: icons.maintenance,
-  //   },
-   
-  // ]
 };
 
 export default Home;

@@ -17,7 +17,7 @@ import BusCancelation from './busCancelation';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [Home,Fee, Academics, ]
+  items: [Fee, Academics ]
   // items: [Home, Fee, Academics, ResourceSharing, Communication, BusCancelation]
 };
 //Fee,ResourceSharing, Communication, BusCancelation

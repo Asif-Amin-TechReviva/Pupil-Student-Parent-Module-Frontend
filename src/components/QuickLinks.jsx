@@ -12,7 +12,7 @@ const theme = useTheme()
     <Grid container spacing={3} >
   <Grid item xs={12} sm={6} md={3}>
     <EcommerceDataCard
-      title="All Earnings"
+      title="Form Teacher"
       count="$3000"
       iconPrimary={<Wallet3 />}
       percentage={
@@ -26,7 +26,7 @@ const theme = useTheme()
   </Grid>
   <Grid item xs={12} sm={6} md={3}>
     <EcommerceDataCard
-      title="Page Views"
+      title="Track Assignments"
       count="290+"
       color="warning"
       iconPrimary={<Book color={theme.palette.warning.dark} />}
@@ -41,7 +41,7 @@ const theme = useTheme()
   </Grid>
   <Grid item xs={12} sm={6} md={3}>
     <EcommerceDataCard
-      title="Total task"
+      title="Last Feedback"
       count="1,568"
       color="success"
       iconPrimary={<Calendar color={theme.palette.success.darker} />}
@@ -56,7 +56,7 @@ const theme = useTheme()
   </Grid>
   <Grid item xs={12} sm={6} md={3}>
     <EcommerceDataCard
-      title="Download"
+      title="Announcements"
       count="$200"
       color="error"
       iconPrimary={<CloudChange color={theme.palette.error.dark} />}

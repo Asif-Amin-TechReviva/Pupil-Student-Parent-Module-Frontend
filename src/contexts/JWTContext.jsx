@@ -120,7 +120,7 @@ export const JWTProvider = ({ children }) => {
   
       // Save data to sessionStorage
       sessionStorage.setItem('studentId', id);
-      sessionStorage.setItem('user', JSON.stringify(user));  // Save user data in sessionStorage
+      sessionStorage.setItem('user', JSON.stringify(user));
   
       setSession(accessToken);
       dispatch({

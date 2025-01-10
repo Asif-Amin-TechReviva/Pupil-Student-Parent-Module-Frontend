@@ -17,8 +17,8 @@ import Transactions from 'sections/widget/data/Transactions';
 import TotalIncome from 'sections/widget/chart/TotalIncome';
 
 // assets
-import { ArrowDown, ArrowUp, Book, Calendar, CloudChange, Wallet3 } from 'iconsax-react';
-import WelcomeBanner from 'sections/dashboard/default/WelcomeBanner';
+// import { ArrowDown, ArrowUp, Book, Calendar, CloudChange, Wallet3 } from 'iconsax-react';
+import QuichLinks from 'components/QuickLinks';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
@@ -27,69 +27,9 @@ export default function DashboardDefault() {
 
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
-      <Grid item xs={12}>
-        <WelcomeBanner />
-      </Grid>
-
       {/* row 1 */}
-      <Grid item xs={12} sm={6} lg={3}>
-        <EcommerceDataCard
-          title="All Earnings"
-          count="$3000"
-          iconPrimary={<Wallet3 />}
-          percentage={
-            <Typography color="primary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.primary.main} />
-        </EcommerceDataCard>
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3}>
-        <EcommerceDataCard
-          title="Page Views"
-          count="290+"
-          color="warning"
-          iconPrimary={<Book color={theme.palette.warning.dark} />}
-          percentage={
-            <Typography color="warning.dark" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowDown size={16} style={{ transform: 'rotate(-45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.warning.dark} />
-        </EcommerceDataCard>
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3}>
-        <EcommerceDataCard
-          title="Total task"
-          count="1,568"
-          color="success"
-          iconPrimary={<Calendar color={theme.palette.success.darker} />}
-          percentage={
-            <Typography color="success.darker" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowUp size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.success.darker} />
-        </EcommerceDataCard>
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3}>
-        <EcommerceDataCard
-          title="Download"
-          count="$200"
-          color="error"
-          iconPrimary={<CloudChange color={theme.palette.error.dark} />}
-          percentage={
-            <Typography color="error.dark" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowDown size={16} style={{ transform: 'rotate(45deg)' }} /> 30.6%
-            </Typography>
-          }
-        >
-          <EcommerceDataChart color={theme.palette.error.dark} />
-        </EcommerceDataCard>
+      <Grid>
+      <QuichLinks/>
       </Grid>
 
       {/* row 2 */}

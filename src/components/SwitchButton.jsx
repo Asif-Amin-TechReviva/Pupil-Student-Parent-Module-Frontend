@@ -67,7 +67,7 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
             transition: "color 0.3s ease",
           }}
         >
-          <Typography variant="body1">Ended</Typography>
+          <Typography variant="body1">Over</Typography>
         </Box>
       </Box>
     </Box>

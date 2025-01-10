@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import axiosServices from 'utils/axios';
+import { toast } from 'react-toastify';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -22,13 +24,23 @@ import { ThemeMode } from 'config';
 // assets
 import { ArrowUp } from 'iconsax-react';
 
+// Dynamic chart labels
+const chartLabels = [
+  'Total Unpaid Monthly Fee',
+  'Total Unpaid Months',
+  'Total Unpaid Bus Fee',
+  'Total OTP',
+  'Total Discount',
+  'Balance'
+];
+
 // chart options
 const pieChartOptions = {
   chart: {
     type: 'donut',
     height: 320
   },
-  labels: ['Total income', 'Total rent', 'Download', 'Views'],
+  labels: chartLabels, // Dynamic labels
   legend: {
     show: false
   },
@@ -39,58 +51,19 @@ const pieChartOptions = {
 
 // ==============================|| CHART ||============================== //
 
-function ApexDonutChart() {
+function ApexDonutChart({ series, options }) {
   const theme = useTheme();
   const downSM = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const mode = theme.palette.mode;
-
-  const { primary } = theme.palette.text;
-  const line = theme.palette.divider;
-  const grey200 = theme.palette.secondary[200];
-  const backColor = theme.palette.background.paper;
-
-  const [series] = useState([31, 26, 23, 20]);
-  const [options, setOptions] = useState(pieChartOptions);
-
-  useEffect(() => {
-    const primaryMain = theme.palette.primary.main;
-    const primaryLighter = theme.palette.primary[100];
-    const warning = theme.palette.warning.main;
-    const success = theme.palette.success.main;
-
-    setOptions((prevState) => ({
-      ...prevState,
-      colors: [primaryMain, warning, success, primaryLighter],
-      xaxis: {
-        labels: {
-          style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary]
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: [primary]
-          }
-        }
-      },
-      grid: {
-        borderColor: line
-      },
-      stroke: {
-        colors: [backColor]
-      },
-      theme: {
-        mode: mode === ThemeMode.DARK ? 'dark' : 'light'
-      }
-    }));
-  }, [mode, primary, line, grey200, backColor, theme]);
-
   return (
     <div id="chart">
-      <ReactApexChart options={options} series={series} type="donut" height={downSM ? 280 : 320} />
+      {series.length === 0 ? (
+        <Typography variant="h6" align="center">
+          No Pending Fee
+        </Typography>
+      ) : (
+        <ReactApexChart options={options} series={series} type="donut" height={downSM ? 280 : 320} />
+      )}
     </div>
   );
 }
@@ -98,8 +71,9 @@ function ApexDonutChart() {
 // ==============================|| CHART WIDGETS - TOTAL INCOME ||============================== //
 
 export default function TotalIncome() {
+  const [feeData, setFeeData] = useState(null); // Initialize with null
   const [anchorEl, setAnchorEl] = useState(null);
-
+  
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -110,12 +84,98 @@ export default function TotalIncome() {
     setAnchorEl(null);
   };
 
+  // Fetch fee data on component mount
+  useEffect(() => {
+    const fetchFeeEnquiry = async () => {
+      try {
+        let api = '/payment/my-enquiry';
+        const response = await axiosServices.get(api);
+        setFeeData(response.data.data); // Set feeData with the fetched data
+      } catch (e) {
+        console.error('Error fetching Fee enquiry:', e);
+        toast.error(e.response?.data?.message || 'Failed to fetch payment enquiry');
+      }
+    };
+
+    fetchFeeEnquiry();
+  }, []); // Empty dependency array ensures the effect runs only once on mount
+
+  if (!feeData) {
+    // Return a loading state or an empty component until feeData is available
+    return <Typography>Loading...</Typography>;
+  }
+
+  // Dynamic chart series based on fee data
+  const chartSeries = [
+    feeData.totalUnPaidMonthlyFee || 0,
+    feeData.totalUnPaidMonths || 0,
+    feeData.totalUnPaidBusFee || 0,
+    feeData.totalOTP || 0,
+    feeData.totalDiscount || 0,
+    feeData.balance || 0
+  ];
+
+  const theme = useTheme();
+  const { primary, secondary, divider, background } = theme.palette;
+
+  const pieChartOptions = {
+    chart: {
+      type: 'donut',
+      height: 320
+    },
+    labels: chartLabels,
+    legend: {
+      show: false
+    },
+    dataLabels: {
+      enabled: false
+    },
+    colors: [
+      primary.main, // Primary
+      secondary.main, // Secondary
+      theme.palette.warning.main, // Warning
+      theme.palette.success.main, // Success
+      theme.palette.info.main, // Info
+      theme.palette.error.main // Error
+    ],
+    xaxis: {
+      labels: {
+        style: {
+          colors: [
+            primary.main, 
+            theme.palette.warning.main, 
+            theme.palette.success.main, 
+            theme.palette.primary[100], 
+            theme.palette.info.main, 
+            theme.palette.error.main
+          ]
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: [primary.main]
+        }
+      }
+    },
+    grid: {
+      borderColor: divider
+    },
+    stroke: {
+      colors: [background.paper]
+    },
+    theme: {
+      mode: theme.palette.mode === ThemeMode.DARK ? 'dark' : 'light'
+    }
+  };
+
   return (
     <MainCard>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-            <Typography variant="h5">Total Income</Typography>
+            <Typography variant="h5">Pending Fee</Typography>
             <IconButton
               color="secondary"
               id="wallet-button"
@@ -142,89 +202,74 @@ export default function TotalIncome() {
           </Stack>
         </Grid>
         <Grid item xs={12}>
-          <ApexDonutChart />
+          <ApexDonutChart series={chartSeries} options={pieChartOptions} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
             <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Dot componentDiv />
-                <Typography>Item01</Typography>
+                <Typography>Total Unpaid Monthly Fee</Typography>
               </Stack>
-
-              <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
-                >
-                  <ArrowUp size={14} /> +$76,343
-                </Typography>
-              </Typography>
+              <Typography variant="subtitle1">₹ {feeData.totalUnPaidMonthlyFee}</Typography>
             </Stack>
           </MainCard>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
-            <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Dot componentDiv sx={{ bgcolor: 'primary.200' }} />
-                <Typography>Item02</Typography>
-              </Stack>
-              <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
-                >
-                  <ArrowUp size={14} /> +$76,343
-                </Typography>
-              </Typography>
-            </Stack>
-          </MainCard>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
-            <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Dot componentDiv color="warning" />
-                <Typography>Item03</Typography>
-              </Stack>
-              <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
-                >
-                  <ArrowUp size={14} /> +$76,343
-                </Typography>
-              </Typography>
-            </Stack>
-          </MainCard>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
-            <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Dot componentDiv color="success" />
-                <Typography>Item04</Typography>
-              </Stack>
-              <Typography variant="subtitle1" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                $23,876
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.25 }}
-                >
-                  <ArrowUp size={14} /> +$76,343
-                </Typography>
-              </Typography>
-            </Stack>
-          </MainCard>
-        </Grid>
+        <MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
+  <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Dot componentDiv />
+      <Typography>Total Unpaid Bus Fee</Typography>
+    </Stack>
+    <Typography variant="subtitle1">₹ {feeData.totalUnPaidBusFee}</Typography>
+  </Stack>
+</MainCard>
+</Grid>
+<Grid item xs={12} sm={6}>
+<MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
+  <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Dot componentDiv />
+      <Typography>Total One Time Payment</Typography>
+    </Stack>
+    <Typography variant="subtitle1">₹ {feeData.totalOTP}</Typography>
+  </Stack>
+</MainCard>
+</Grid>
+<Grid item xs={12} sm={6}>
+<MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
+  <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Dot componentDiv />
+      <Typography>Total Discount</Typography>
+    </Stack>
+    <Typography variant="subtitle1">₹ {feeData.totalDiscount}</Typography>
+  </Stack>
+</MainCard>
+</Grid>
+<Grid item xs={12} sm={6}>
+<MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
+  <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Dot componentDiv />
+      <Typography>Balance at Last Payment</Typography>
+    </Stack>
+    <Typography variant="subtitle1">₹ {feeData.balance}</Typography>
+  </Stack>
+</MainCard>
+</Grid>
+<Grid item xs={12} sm={6}>
+<MainCard content={false} border={false} sx={{ bgcolor: 'background.default' }}>
+  <Stack alignItems="flex-start" sx={{ p: 2 }} spacing={0.5}>
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Dot componentDiv />
+      <Typography>Total Outstanding</Typography>
+    </Stack>
+    <Typography variant="subtitle1">₹ {feeData.grandTotal}</Typography>
+  </Stack>
+</MainCard>
+</Grid>
       </Grid>
     </MainCard>
   );

@@ -6,10 +6,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { useTheme } from '@mui/material/styles';
-import QuichLinks from 'components/QuichLinks';
+import QuichLinks from 'components/QuickLinks';
 import SwitchButton from 'components/SwitchButton';
 import Pagination from 'components/Pagination';
-
 const Assignments = () => {
   const theme = useTheme();
   const [assignments, setAssignments] = useState([]);
@@ -21,24 +20,25 @@ const Assignments = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
-
   const today = new Date();
-
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
         setLoading(true);
-        const data = await FetchAllAssignments();
+  
+        // Pass the `activeTab` value as the `status` parameter
+        const data = await FetchAllAssignments(page + 1, take, '', 'desc', activeTab);
+  
         const allAssignments = data.data.data;
-
-        setTotalAssignments(allAssignments.length);
-
+  
+        setTotalAssignments(data.data.total || allAssignments.length); // Adjust if API provides a total count
+  
         const paginatedAssignments = allAssignments.slice(page * take, (page + 1) * take);
-
+  
         const ongoing = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) >= today);
-
+  
         const ended = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) < today);
-
+  
         setAssignments({ ongoing, ended });
       } catch (error) {
         console.error('Error fetching assignments:', error);
@@ -47,9 +47,10 @@ const Assignments = () => {
         setLoading(false);
       }
     };
-
+  
     fetchAssignments();
-  }, [page, take]);
+  }, [page, take, activeTab]); 
+  
 
   const { ongoing, ended } = assignments;
 
@@ -107,9 +108,10 @@ const Assignments = () => {
       <QuichLinks />
       <SwitchButton activeTab={activeTab} setActiveTab={setActiveTab} />
 
+
       {loading ? (
         <p>Loading...</p>
-      ) : (activeTab === 'ongoing' ? ongoing : ended).length > 0 ? (
+      ) : (activeTab === 'ongoing' ? ongoing : ended)?.length > 0 ? (
         <>
           <Grid container spacing={3}>
             {(activeTab === 'ongoing' ? ongoing : ended).map((assignment) => (
@@ -283,7 +285,7 @@ const Assignments = () => {
                 {/* Date Information */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <Typography variant="body3" color="text.primary">
-                    Created At: {new Date(selectedAssignment.createdAt).toLocaleDateString()}
+                    Created On: {new Date(selectedAssignment.createdAt).toLocaleDateString()}
                   </Typography>
                   <Typography variant="body3" color="error">
                     Due Date: {new Date(selectedAssignment.dueDate).toLocaleDateString()}

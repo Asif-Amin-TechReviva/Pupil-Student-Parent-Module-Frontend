@@ -29,9 +29,15 @@ const Fee= {
       children: [
         {
           id: 'Fee-Enquiry',
-          title: <FormattedMessage id="Payments" />,
+          title: <FormattedMessage id="All-Payments" />,
           type: 'item',
           url: '/fee/all-payments',
+          // target: true
+        },  {
+          id: 'Fee-Enquiry',
+          title: <FormattedMessage id="Pay-Online" />,
+          type: 'item',
+          url: '/fee/pay-online',
           // target: true
         },   
       ]
