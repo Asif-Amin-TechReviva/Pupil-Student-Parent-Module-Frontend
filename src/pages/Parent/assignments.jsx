@@ -1,59 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { FetchAllAssignments, FetchAssignmentDetails } from 'api/assignments';
+import { FetchAllAssignments, FetchAssignmentDetails } from 'api/assignments'; // Replace with your actual API imports
 import { toast } from 'react-toastify';
-import { Card, CardContent, Typography, Box, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Button,
+  Grid,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+  Divider
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import QuichLinks from 'components/QuickLinks';
 import SwitchButton from 'components/SwitchButton';
-import Pagination from 'components/Pagination';
+import TablePagination from 'components/third-party/react-table/TablePagination';
+
 const Assignments = () => {
   const theme = useTheme();
-  const [assignments, setAssignments] = useState([]);
+
+  // State
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('ongoing');
-  const [page, setPage] = useState(0);
-  const [take, setTake] = useState(10);
-  const [totalAssignments, setTotalAssignments] = useState(0);
+  const [modalLoading, setModalLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
-  const [modalLoading, setModalLoading] = useState(false);
-  const today = new Date();
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        setLoading(true);
-  
-        // Pass the `activeTab` value as the `status` parameter
-        const data = await FetchAllAssignments(page + 1, take, '', 'desc', activeTab);
-  
-        const allAssignments = data.data.data;
-  
-        setTotalAssignments(data.data.total || allAssignments.length); // Adjust if API provides a total count
-  
-        const paginatedAssignments = allAssignments.slice(page * take, (page + 1) * take);
-  
-        const ongoing = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) >= today);
-  
-        const ended = paginatedAssignments.filter((assignment) => new Date(assignment.dueDate) < today);
-  
-        setAssignments({ ongoing, ended });
-      } catch (error) {
-        console.error('Error fetching assignments:', error);
-        toast.error('Unable to fetch assignments. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchAssignments();
-  }, [page, take, activeTab]); 
-  
+  const [assignments, setAssignments] = useState([]);
+  const [activeTab, setActiveTab] = useState('ongoing');
 
-  const { ongoing, ended } = assignments;
+  // Pagination state
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
 
+  // Fetch assignments
+  const fetchAssignments = async () => {
+    setLoading(true);
+    try {
+      const status = activeTab === 'ongoing' ? 'ongoing' : 'completed';
+      const response = await FetchAllAssignments(pageIndex + 1, pageSize, '', 'desc', status);
+      const fetchedAssignments = response?.data?.data || [];
+      setAssignments(fetchedAssignments);
+      setTotalRows(response?.data?.totalRecords || 0);
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+      toast.error('Failed to fetch assignments. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch assignment details
   const handleOpenModal = async (assignmentId) => {
     try {
       setModalLoading(true);
@@ -74,16 +75,16 @@ const Assignments = () => {
     setSelectedAssignment(null);
   };
 
-  const truncateText = (text, maxLength) => {
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-  };
+  useEffect(() => {
+    fetchAssignments();
+  }, [activeTab, pageIndex, pageSize]);
+
+  // Download attachment
   const handleDownload = (url, title) => {
     if (url) {
       fetch(url)
         .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch the attachment');
-          }
+          if (!response.ok) throw new Error('Failed to fetch the attachment');
           return response.blob();
         })
         .then((blob) => {
@@ -94,27 +95,27 @@ const Assignments = () => {
           link.click();
           window.URL.revokeObjectURL(downloadUrl);
         })
-        .catch((error) => {
-          console.error('Download failed:', error);
-          toast.error('Failed to download attachment.');
-        });
+        .catch(() => toast.error('Failed to download attachment.'));
     } else {
       toast.error('No attachment available.');
     }
+  };
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
 
   return (
     <div>
       <QuichLinks />
-      <SwitchButton activeTab={activeTab} setActiveTab={setActiveTab} />
-
-
+      <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} />
       {loading ? (
-        <p>Loading...</p>
-      ) : (activeTab === 'ongoing' ? ongoing : ended)?.length > 0 ? (
+        <Box textAlign="center" mt={3}>
+          <CircularProgress />
+        </Box>
+      ) : assignments.length > 0 ? (
         <>
           <Grid container spacing={3}>
-            {(activeTab === 'ongoing' ? ongoing : ended).map((assignment) => (
+            {assignments.map((assignment) => (
               <Grid item xs={12} sm={6} md={6} key={assignment.id}>
                 <Card
                   variant="outlined"
@@ -195,10 +196,9 @@ const Assignments = () => {
                         <Button
                           variant="outlined"
                           color="success"
-                          backgroundColor= '#1976D2'
+                          backgroundColor="#1976D2"
                           sx={{ borderRadius: 1, textTransform: 'none', marginLeft: 2 }}
                           onClick={() => handleOpenModal(assignment.id)}
-                          
                         >
                           View More
                         </Button>
@@ -209,21 +209,31 @@ const Assignments = () => {
               </Grid>
             ))}
           </Grid>
-
-          <Pagination
-            page={page}
-            setPage={setPage}
-            take={take}
-            totalRows={totalAssignments}
-            pageCount={Math.ceil(totalAssignments / take)}
-            onPageChange={(newPage, rowsPerPage) => {
-              setPage(newPage);
-              setTake(rowsPerPage);
-            }}
-          />
+          <Box mt={3}>
+            <TablePagination
+              getPageCount={() => Math.ceil(totalRows / pageSize)}
+              setPageIndex={setPageIndex}
+              setPageSize={setPageSize}
+              getState={() => ({ pagination: { pageIndex, pageSize } })}
+              initialPageSize={10}
+            />
+          </Box>
         </>
       ) : (
-        <p>No assignments found.</p>
+        <Box>
+          <Typography textAlign="center" mt={3}>
+            No assignments found.
+          </Typography>
+          <Box mt={3}>
+            <TablePagination
+              getPageCount={() => Math.ceil(totalRows / pageSize)}
+              setPageIndex={setPageIndex}
+              setPageSize={setPageSize}
+              getState={() => ({ pagination: { pageIndex, pageSize } })}
+              initialPageSize={10}
+            />
+          </Box>
+        </Box>
       )}
 
       <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
@@ -238,7 +248,7 @@ const Assignments = () => {
           >
             Assignment Details
           </DialogTitle>
-          <Button  
+          <Button
             onClick={handleCloseModal}
             color="error"
             variant="outlined"
@@ -248,7 +258,6 @@ const Assignments = () => {
             }}
           >
             Close
-
           </Button>
         </Box>
 

@@ -4,11 +4,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const FetchFeeEnquiry = async () => {
   try {
-    let api = `/payment/my-enquiry`;
+    let api = `/payment/student/my-enquiry`;
 
     const data = await axiosServices.get(api);
 
-    return data.data;
+    return data;
   } catch (e) {
     console.error('Error fetching Fee enquiry:', e);
     toast.error(e.response?.data?.message || 'Failed to fetch payment enquiry');

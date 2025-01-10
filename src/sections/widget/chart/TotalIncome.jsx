@@ -88,7 +88,7 @@ export default function TotalIncome() {
   useEffect(() => {
     const fetchFeeEnquiry = async () => {
       try {
-        let api = '/payment/my-enquiry';
+        let api = '/payment/student/my-enquiry';
         const response = await axiosServices.get(api);
         setFeeData(response.data.data); // Set feeData with the fetched data
       } catch (e) {
