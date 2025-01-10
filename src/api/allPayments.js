@@ -16,19 +16,15 @@ export const FetchFeeEnquiry = async () => {
   }
 };
 
-export const FetchPaymentDetails = async (id, page = 1, take = 25, searchQuery = '', sortOrder = 'asc') => {
+export const FetchPaymentDetails = async (id, page = 1, take = 10, searchQuery = '', sortOrder = 'asc') => {
   try {
-    // Construct the API endpoint with query parameters
-    const api = `/payment/${id}?page=${page}&take=${take}&searchQuery=${encodeURIComponent(searchQuery)}&sortOrder=${sortOrder}`;
-    
-    // Call the API using axios
+    const api = `/payment/${id}?page=${page}&take=${take}&searchQuery=${searchQuery}&sortOrder=${sortOrder}`;
     const response = await axiosServices.get(api);
-    
-    // Return the data from the API response
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching payment details:', error);
     toast.error(error.response?.data?.message || 'Failed to fetch payment details');
-    throw error; // Rethrow the error for further handling if needed
+    throw error;
   }
 };
+

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // third-party
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
 
 // ==============================|| EDITOR - QUILL ||============================== //
 
