@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 // ==============================|| TABLE PAGINATION ||============================== //
 
-export default function TablePagination({ getPageCount, setPageIndex, setPageSize, getState, initialPageSize }) {
+export default function TablePagination({ getPageCount, setPageIndex, setPageSize, getState, initialPageSize,labelRowsPerPage = "Rows per page" }) {
   const [open, setOpen] = useState(false);
   let options = [10, 25, 50, 100];
 
@@ -50,7 +50,7 @@ export default function TablePagination({ getPageCount, setPageIndex, setPageSiz
         <Stack direction="row" spacing={1} alignItems="center">
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="caption" color="secondary">
-              Row per page
+             {labelRowsPerPage}
             </Typography>
             <FormControl sx={{ m: 1 }}>
               <Select
@@ -72,7 +72,7 @@ export default function TablePagination({ getPageCount, setPageIndex, setPageSiz
             </FormControl>
           </Stack>
           <Typography variant="caption" color="secondary">
-            Go to
+            page
           </Typography>
           <TextField
             size="small"
@@ -107,5 +107,6 @@ TablePagination.propTypes = {
   setPageIndex: PropTypes.func,
   setPageSize: PropTypes.func,
   getState: PropTypes.func,
-  initialPageSize: PropTypes.number
+  initialPageSize: PropTypes.number,
+  labelRowsPerPage: PropTypes.string
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FetchAllAssignments, FetchAssignmentDetails } from 'api/assignments'; // Replace with your actual API imports
+import { FetchAllAssignments, FetchAssignmentDetails } from 'api/assignments';
 import { toast } from 'react-toastify';
 import {
   Card,
@@ -20,8 +20,14 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import QuichLinks from 'components/QuickLinks';
 import SwitchButton from 'components/SwitchButton';
 import TablePagination from 'components/third-party/react-table/TablePagination';
-
-const Assignments = () => {
+const subjectColors = {
+  Rhymes: '#FF5722',    
+  Science: '#4CAF50', 
+  History: '#2196F3', 
+  Islamiyat: '#FFC107', 
+  Hindi:'#222'
+};
+const Assignments = ({ getPageCount }) => {
   const theme = useTheme();
 
   // State
@@ -35,7 +41,7 @@ const Assignments = () => {
   // Pagination state
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [totalRows, setTotalRows] = useState(0);
+  const [totalPageCount, setTotalPageCount] = useState(0);
 
   // Fetch assignments
   const fetchAssignments = async () => {
@@ -45,7 +51,7 @@ const Assignments = () => {
       const response = await FetchAllAssignments(pageIndex + 1, pageSize, '', 'desc', status);
       const fetchedAssignments = response?.data?.data || [];
       setAssignments(fetchedAssignments);
-      setTotalRows(response?.data?.totalRecords || 0);
+      setTotalPageCount(response?.data?.meta?.pageCount || 0);
     } catch (error) {
       console.error('Error fetching assignments:', error);
       toast.error('Failed to fetch assignments. Please try again.');
@@ -84,7 +90,9 @@ const Assignments = () => {
     if (url) {
       fetch(url)
         .then((response) => {
-          if (!response.ok) throw new Error('Failed to fetch the attachment');
+          if (!response.ok) {
+            throw new Error('Failed to fetch the attachment');
+          }
           return response.blob();
         })
         .then((blob) => {
@@ -95,7 +103,10 @@ const Assignments = () => {
           link.click();
           window.URL.revokeObjectURL(downloadUrl);
         })
-        .catch(() => toast.error('Failed to download attachment.'));
+        .catch((error) => {
+          console.error('Download failed:', error);
+          toast.error('Failed to download attachment.');
+        });
     } else {
       toast.error('No attachment available.');
     }
@@ -103,7 +114,7 @@ const Assignments = () => {
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
-
+ 
   return (
     <div>
       <QuichLinks />
@@ -115,7 +126,10 @@ const Assignments = () => {
       ) : assignments.length > 0 ? (
         <>
           <Grid container spacing={3}>
-            {assignments.map((assignment) => (
+            {assignments.map((assignment) =>{ const subjectColor = subjectColors[assignment.subject.name];
+            
+            return (
+              
               <Grid item xs={12} sm={6} md={6} key={assignment.id}>
                 <Card
                   variant="outlined"
@@ -133,11 +147,13 @@ const Assignments = () => {
                       position: 'absolute',
                       top: 16,
                       right: 16,
-                      backgroundColor: '#FFA726',
+                      backgroundColor: subjectColor,
                       color: '#fff',
                       padding: '4px 12px',
                       borderRadius: '12px',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
+                      fontSize: { xs: '0.8rem', sm: '1rem' }, // Adjust font size for smaller screens
+                      maxWidth: '100%' // Prevents overflow
                     }}
                   >
                     {assignment.subject.name}
@@ -151,16 +167,48 @@ const Assignments = () => {
                       justifyContent: 'space-between'
                     }}
                   >
-                    <Typography variant="h4" fontWeight="bold" gutterBottom>
+                    <Typography
+                      variant="h4"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{
+                        fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Adjust font size for smaller screens
+                        overflowWrap: 'break-word', // Prevents overflow of title on smaller screens
+                        wordBreak: 'break-word', // Ensures the title breaks on long words
+                        marginTop: '2rem' // Prevents overlap
+                      }}
+                    >
                       {assignment.title}
                     </Typography>
-                    <Typography variant="body1" fontWeight="bold" gutterBottom>
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{
+                        fontSize: { xs: '0.875rem', sm: '1rem' } // Adjust font size for smaller screens
+                      }}
+                    >
                       Assigned by: {`${assignment.addedBy.user.firstName} ${assignment.addedBy.user.lastName}`}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      gutterBottom
+                      sx={{
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
+                      }}
+                    >
                       Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
                     </Typography>
-                    <Typography variant="body1" sx={{ marginTop: 2 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        marginTop: 2,
+                        marginBottom: 2,
+                        fontSize: '0,8rem',
+                        textAlign: 'justify'
+                      }}
+                    >
                       {truncateText(assignment.description, 500)}
                     </Typography>
 
@@ -169,13 +217,29 @@ const Assignments = () => {
                         marginTop: 'auto',
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'baseline'
+                        alignItems: 'baseline',
+                        flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
+                        gap: { xs: '1rem', sm: '0' } // Space between buttons on small screens
                       }}
                     >
-                      <Typography variant="body2" color="textSecondary" gutterBottom>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        gutterBottom
+                        sx={{
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
+                        }}
+                      >
                         Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
                       </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          // flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
+                          gap: '4.4rem' // Space between buttons
+                        }}
+                      >
                         <Button
                           variant="contained"
                           color="primary"
@@ -187,7 +251,8 @@ const Assignments = () => {
                             backgroundColor: '#1976D2',
                             '&:hover': {
                               backgroundColor: '#1565C0'
-                            }
+                            },
+                            width: '100%' // Ensure the button width is consistent
                           }}
                         >
                           Download
@@ -197,7 +262,11 @@ const Assignments = () => {
                           variant="outlined"
                           color="success"
                           backgroundColor="#1976D2"
-                          sx={{ borderRadius: 1, textTransform: 'none', marginLeft: 2 }}
+                          sx={{
+                            borderRadius: 1,
+                            textTransform: 'none',
+                            width: '100%' // Ensure the button width is consistent
+                          }}
                           onClick={() => handleOpenModal(assignment.id)}
                         >
                           View More
@@ -207,15 +276,18 @@ const Assignments = () => {
                   </CardContent>
                 </Card>
               </Grid>
-            ))}
+            )})}
           </Grid>
           <Box mt={3}>
             <TablePagination
-              getPageCount={() => Math.ceil(totalRows / pageSize)}
+              getPageCount={() => Math.ceil(totalPageCount)}
               setPageIndex={setPageIndex}
-              setPageSize={setPageSize}
+              setPageSize={(newSize) => {
+                setPageSize(newSize);
+              }}
               getState={() => ({ pagination: { pageIndex, pageSize } })}
-              initialPageSize={10}
+              initialPageSize={pageSize}
+              labelRowsPerPage="Assignments Per Page"
             />
           </Box>
         </>
@@ -226,11 +298,14 @@ const Assignments = () => {
           </Typography>
           <Box mt={3}>
             <TablePagination
-              getPageCount={() => Math.ceil(totalRows / pageSize)}
+              getPageCount={() => Math.ceil(totalPageCount)}
               setPageIndex={setPageIndex}
-              setPageSize={setPageSize}
+              setPageSize={(newSize) => {
+                setPageSize(newSize);
+              }}
               getState={() => ({ pagination: { pageIndex, pageSize } })}
-              initialPageSize={10}
+              initialPageSize={pageSize}
+              labelRowsPerPage="Assignments Per Page"
             />
           </Box>
         </Box>
@@ -285,7 +360,7 @@ const Assignments = () => {
                 </Typography>
 
                 {/* Assignment Description */}
-                <Typography variant="body6" paragraph sx={{ lineHeight: 1.6, color: '#555' }}>
+                <Typography variant="body6" paragraph sx={{ lineHeight: 1.6, color: '#555', textAlign: 'justify' }}>
                   {selectedAssignment.description}
                 </Typography>
 
