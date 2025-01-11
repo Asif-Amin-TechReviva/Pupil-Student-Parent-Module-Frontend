@@ -237,7 +237,7 @@ const Assignments = ({ getPageCount }) => {
                           display: 'flex',
                           justifyContent: 'space-between',
                           // flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
-                          gap: '4.4rem' // Space between buttons
+                          gap: '2rem' // Space between buttons
                         }}
                       >
                         <Button
