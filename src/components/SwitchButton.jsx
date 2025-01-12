@@ -8,7 +8,7 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '120px'
+        height: { xs: '60px',  md: '120px' }
       }}
     >
       <Box
@@ -16,14 +16,14 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderRadius: '20px',
+          borderRadius:  '20px' ,
           height: '40px',
           backgroundColor: '#d3d3d3',
           position: 'relative',
           boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
           overflow: 'hidden',
           cursor: 'pointer',
-          width: { xs: '95%', sm: '60%', md: '50%' } // Responsive width
+          width: { xs: '100%', sm: '60%', md: '50%' }
         }}
       >
         {/* Toggle Indicator */}

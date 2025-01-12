@@ -138,60 +138,7 @@ const Assignments = ({ getPageCount }) => {
     <div>
       <QuichLinks />
       <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} />
-      {/* <Box
-  mt={3}
-  mb={3}
-  display="flex"
-  justifyContent="left"
-  alignItems="center"
->
-  <TextField
-    variant="outlined"
-    // label="Search by Title or Subject"
-    value={persistedSearchText}
-    onChange={handleSearchChange}
-    placeholder="Search By Title or Subject"
-    sx={{
-      width: '100%',
-      // maxWidth: 400,
-      '& .MuiOutlinedInput-root': {
-        backgroundColor: '#fff', 
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-        '&:hover': {
-          backgroundColor: '#ffffff',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // More pronounced shadow on hover
-        },
-        '&.Mui-focused': {
-          backgroundColor: '#ffffff', // Highlight on focus
-          boxShadow: '0 0 0 2px #1976D2', // Blue outline when focused
-        },
-      },
-      '& .MuiInputLabel-root': {
-        color: '#1976D2', // Blue label color
-        fontWeight: 'bold', // Bold label for emphasis
-      },
-      '& .MuiInputLabel-root.Mui-focused': {
-        color: '#1565C0', // Darker blue for focused label
-      },
-    }}
-    InputProps={{
-      startAdornment: (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'right',
-            color: '#1976D2',
-            marginRight: 1,
-          }}
-        >
-          <i className="fas fa-search" style={{ fontSize: '1rem' }}></i>
-        </Box>
-      ),
-    }}
-  />
-</Box> */}
-
-      <Box mt={3} mb={3} display="flex" justifyContent="left" alignItems="center">
+      <Box mt={1} mb={2} display="flex" justifyContent="left" alignItems="center">
         <TextField
           variant="outlined"
           value={persistedSearchText}
@@ -430,39 +377,16 @@ const Assignments = ({ getPageCount }) => {
       )}
 
       <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
-        {/* <Box display="flex" justifyContent="space-between" alignItems="baseline" sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}>
-          <DialogTitle
-            sx={{
-              fontWeight: 'bold',
-              fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Smaller font size on small screens
-              color: '#1976D2',
-              flexGrow: 1
-            }}
-          >
-            Assignment Details
-          </DialogTitle>
-          <Button
-            onClick={handleCloseModal}
-            color="error"
-            variant="outlined"
-            sx={{
-              padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' }, 
-              fontSize: { xs: '0.875rem', sm: '1rem' } 
-            }}
-          >
-            Close
-          </Button>
-        </Box> */}
         <Box
   display="flex"
   justifyContent={{ xs: 'center', sm: 'space-between' }}
   alignItems="center"
-  sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}
+  sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem' } }}
 >
   <DialogTitle
     sx={{
       fontWeight: 'bold',
-      fontSize: { xs: '1.25rem', sm: '1.5rem' },
+      fontSize: { xs: '1rem', sm: '1.5rem' },
       color: '#1976D2',
       textAlign: { xs: 'left', sm: 'left' }, 
       flexGrow: 1,
