@@ -430,7 +430,7 @@ const Assignments = ({ getPageCount }) => {
       )}
 
       <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
-        <Box display="flex" justifyContent="space-between" alignItems="baseline" sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}>
+        {/* <Box display="flex" justifyContent="space-between" alignItems="baseline" sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}>
           <DialogTitle
             sx={{
               fontWeight: 'bold',
@@ -446,13 +446,45 @@ const Assignments = ({ getPageCount }) => {
             color="error"
             variant="outlined"
             sx={{
-              padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' }, // Smaller button padding on small screens
-              fontSize: { xs: '0.875rem', sm: '1rem' } // Smaller font size on small screens
+              padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' }, 
+              fontSize: { xs: '0.875rem', sm: '1rem' } 
             }}
           >
             Close
           </Button>
-        </Box>
+        </Box> */}
+        <Box
+  display="flex"
+  justifyContent={{ xs: 'center', sm: 'space-between' }}
+  alignItems="center"
+  sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem 2rem' } }}
+>
+  <DialogTitle
+    sx={{
+      fontWeight: 'bold',
+      fontSize: { xs: '1.25rem', sm: '1.5rem' },
+      color: '#1976D2',
+      textAlign: { xs: 'left', sm: 'left' }, 
+      flexGrow: 1,
+    }}
+  >
+    Assignment Details
+  </DialogTitle>
+  <Button
+    onClick={handleCloseModal}
+    color="error"
+    variant="outlined"
+    sx={{
+      marginTop: { xs: '1rem', sm: 0 }, // Add margin on small screens to separate it from the title
+      padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' },
+      fontSize: { xs: '0.875rem', sm: '1rem' },
+      alignSelf: { xs: 'center', sm: 'flex-end' }, // Center button on small screens
+    }}
+  >
+    Close
+  </Button>
+</Box>
+
 
         <DialogContent
           sx={{
@@ -472,19 +504,16 @@ const Assignments = ({ getPageCount }) => {
           ) : (
             selectedAssignment && (
               <Box>
-                {/* Assignment Title */}
                 <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ textAlign: 'center', color: '#333', paddingTop: '15px' }}>
                   {selectedAssignment.title}
                 </Typography>
 
-                {/* Assignment Description */}
                 <Typography variant="body6" paragraph sx={{ lineHeight: 1.6, color: '#555', textAlign: 'justify' }}>
                   {selectedAssignment.description}
                 </Typography>
 
                 <Divider sx={{ my: 3, borderColor: '#1976D2' }} />
 
-                {/* Date Information */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <Typography variant="body3" color="text.primary">
                     Created On: {new Date(selectedAssignment.createdAt).toLocaleDateString()}
@@ -494,7 +523,6 @@ const Assignments = ({ getPageCount }) => {
                   </Typography>
                 </Box>
 
-                {/* Attachment Image */}
                 {selectedAssignment.attachmentUrl && (
                   <Box mt={3} textAlign="center" mb={3}>
                     <img
@@ -515,7 +543,6 @@ const Assignments = ({ getPageCount }) => {
           )}
         </DialogContent>
 
-        {/* Dialog Actions */}
         <DialogActions sx={{ padding: '1rem 2rem' }}>
           {selectedAssignment?.attachmentUrl && (
             <Button
