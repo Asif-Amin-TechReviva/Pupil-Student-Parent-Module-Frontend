@@ -13,19 +13,21 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
-  Divider
+  Divider,
+  TextField
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import QuichLinks from 'components/QuickLinks';
 import SwitchButton from 'components/SwitchButton';
 import TablePagination from 'components/third-party/react-table/TablePagination';
+import SearchIcon from '@mui/icons-material/Search';
 const subjectColors = {
-  Rhymes: '#FF5722',    
-  Science: '#4CAF50', 
-  History: '#2196F3', 
-  Islamiyat: '#FFC107', 
-  Hindi:'#222'
+  Rhymes: '#FF5722',
+  Science: '#4CAF50',
+  History: '#2196F3',
+  Islamiyat: '#FFC107',
+  Hindi: '#222'
 };
 const Assignments = ({ getPageCount }) => {
   const theme = useTheme();
@@ -37,6 +39,8 @@ const Assignments = ({ getPageCount }) => {
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [assignments, setAssignments] = useState([]);
   const [activeTab, setActiveTab] = useState('ongoing');
+  const [searchText, setSearchText] = useState('');
+  const [persistedSearchText, setPersistedSearchText] = useState('');
 
   // Pagination state
   const [pageIndex, setPageIndex] = useState(0);
@@ -48,8 +52,20 @@ const Assignments = ({ getPageCount }) => {
     setLoading(true);
     try {
       const status = activeTab === 'ongoing' ? 'ongoing' : 'completed';
-      const response = await FetchAllAssignments(pageIndex + 1, pageSize, '', 'desc', status);
-      const fetchedAssignments = response?.data?.data || [];
+      const response = await FetchAllAssignments(
+        pageIndex + 1,
+        pageSize,
+        searchText.trim(), // Pass search text (trimmed for clean input)
+        'desc',
+        status
+      );
+      let fetchedAssignments = response?.data?.data || [];
+      if (searchText.trim()) {
+        fetchedAssignments = fetchedAssignments.filter((assignment) => {
+          const lowerSearch = searchText.toLowerCase();
+          return assignment.title.toLowerCase().includes(lowerSearch) || assignment.subject.name.toLowerCase().includes(lowerSearch);
+        });
+      }
       setAssignments(fetchedAssignments);
       setTotalPageCount(response?.data?.meta?.pageCount || 0);
     } catch (error) {
@@ -59,7 +75,6 @@ const Assignments = ({ getPageCount }) => {
       setLoading(false);
     }
   };
-
   // Fetch assignment details
   const handleOpenModal = async (assignmentId) => {
     try {
@@ -83,7 +98,7 @@ const Assignments = ({ getPageCount }) => {
 
   useEffect(() => {
     fetchAssignments();
-  }, [activeTab, pageIndex, pageSize]);
+  }, [activeTab, pageIndex, pageSize, searchText]);
 
   // Download attachment
   const handleDownload = (url, title) => {
@@ -114,11 +129,113 @@ const Assignments = ({ getPageCount }) => {
   const truncateText = (text, maxLength) => {
     return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
   };
- 
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchText(value); // Update search text
+    setPersistedSearchText(value); // Keep it persisted across tabs
+  };
   return (
     <div>
       <QuichLinks />
       <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} />
+      {/* <Box
+  mt={3}
+  mb={3}
+  display="flex"
+  justifyContent="left"
+  alignItems="center"
+>
+  <TextField
+    variant="outlined"
+    // label="Search by Title or Subject"
+    value={persistedSearchText}
+    onChange={handleSearchChange}
+    placeholder="Search By Title or Subject"
+    sx={{
+      width: '100%',
+      // maxWidth: 400,
+      '& .MuiOutlinedInput-root': {
+        backgroundColor: '#fff', 
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+        '&:hover': {
+          backgroundColor: '#ffffff',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // More pronounced shadow on hover
+        },
+        '&.Mui-focused': {
+          backgroundColor: '#ffffff', // Highlight on focus
+          boxShadow: '0 0 0 2px #1976D2', // Blue outline when focused
+        },
+      },
+      '& .MuiInputLabel-root': {
+        color: '#1976D2', // Blue label color
+        fontWeight: 'bold', // Bold label for emphasis
+      },
+      '& .MuiInputLabel-root.Mui-focused': {
+        color: '#1565C0', // Darker blue for focused label
+      },
+    }}
+    InputProps={{
+      startAdornment: (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'right',
+            color: '#1976D2',
+            marginRight: 1,
+          }}
+        >
+          <i className="fas fa-search" style={{ fontSize: '1rem' }}></i>
+        </Box>
+      ),
+    }}
+  />
+</Box> */}
+
+      <Box mt={3} mb={3} display="flex" justifyContent="left" alignItems="center">
+        <TextField
+          variant="outlined"
+          value={persistedSearchText}
+          onChange={handleSearchChange}
+          placeholder="Search By Title or Subject"
+          sx={{
+            width: '100%',
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#fff',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+              '&:hover': {
+                backgroundColor: '#ffffff',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' // More pronounced shadow on hover
+              },
+              '&.Mui-focused': {
+                backgroundColor: '#ffffff', // Highlight on focus
+                boxShadow: '0 0 0 2px #1976D2' // Blue outline when focused
+              }
+            },
+            '& .MuiInputLabel-root': {
+              color: '#1976D2', // Blue label color
+              fontWeight: 'bold' // Bold label for emphasis
+            },
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: '#1565C0' // Darker blue for focused label
+            }
+          }}
+          InputProps={{
+            endAdornment: (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: '#1976D2',
+                  marginLeft: 1
+                }}
+              >
+                <SearchIcon />
+              </Box>
+            )
+          }}
+        />
+      </Box>
+
       {loading ? (
         <Box textAlign="center" mt={3}>
           <CircularProgress />
@@ -126,157 +243,158 @@ const Assignments = ({ getPageCount }) => {
       ) : assignments.length > 0 ? (
         <>
           <Grid container spacing={3}>
-            {assignments.map((assignment) =>{ const subjectColor = subjectColors[assignment.subject.name];
-            
-            return (
-              
-              <Grid item xs={12} sm={6} md={6} key={assignment.id}>
-                <Card
-                  variant="outlined"
-                  sx={{
-                    borderRadius: 2,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    position: 'relative',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}
-                >
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 16,
-                      right: 16,
-                      backgroundColor: subjectColor,
-                      color: '#fff',
-                      padding: '4px 12px',
-                      borderRadius: '12px',
-                      fontWeight: 'bold',
-                      fontSize: { xs: '0.8rem', sm: '1rem' }, // Adjust font size for smaller screens
-                      maxWidth: '100%' // Prevents overflow
-                    }}
-                  >
-                    {assignment.subject.name}
-                  </Box>
+            {assignments.map((assignment) => {
+              const subjectColor = subjectColors[assignment.subject.name];
 
-                  <CardContent
+              return (
+                <Grid item xs={12} sm={6} md={6} key={assignment.id}>
+                  <Card
+                    variant="outlined"
                     sx={{
-                      flex: '1 1 auto',
+                      borderRadius: 2,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                      position: 'relative',
+                      height: '100%',
                       display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between'
+                      flexDirection: 'column'
                     }}
                   >
-                    <Typography
-                      variant="h4"
-                      fontWeight="bold"
-                      gutterBottom
-                      sx={{
-                        fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Adjust font size for smaller screens
-                        overflowWrap: 'break-word', // Prevents overflow of title on smaller screens
-                        wordBreak: 'break-word', // Ensures the title breaks on long words
-                        marginTop: '2rem' // Prevents overlap
-                      }}
-                    >
-                      {assignment.title}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      gutterBottom
-                      sx={{
-                        fontSize: { xs: '0.875rem', sm: '1rem' } // Adjust font size for smaller screens
-                      }}
-                    >
-                      Assigned by: {`${assignment.addedBy.user.firstName} ${assignment.addedBy.user.lastName}`}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      gutterBottom
-                      sx={{
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
-                      }}
-                    >
-                      Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        marginTop: 2,
-                        marginBottom: 2,
-                        fontSize: '0,8rem',
-                        textAlign: 'justify'
-                      }}
-                    >
-                      {truncateText(assignment.description, 500)}
-                    </Typography>
-
                     <Box
                       sx={{
-                        marginTop: 'auto',
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        backgroundColor: subjectColor,
+                        color: '#fff',
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontWeight: 'bold',
+                        fontSize: { xs: '0.8rem', sm: '1rem' }, // Adjust font size for smaller screens
+                        maxWidth: '100%' // Prevents overflow
+                      }}
+                    >
+                      {assignment.subject.name}
+                    </Box>
+
+                    <CardContent
+                      sx={{
+                        flex: '1 1 auto',
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'baseline',
-                        flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
-                        gap: { xs: '1rem', sm: '0' } // Space between buttons on small screens
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
                       }}
                     >
                       <Typography
+                        variant="h4"
+                        fontWeight="bold"
+                        gutterBottom
+                        sx={{
+                          fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Adjust font size for smaller screens
+                          overflowWrap: 'break-word', // Prevents overflow of title on smaller screens
+                          wordBreak: 'break-word', // Ensures the title breaks on long words
+                          marginTop: { xs: '2rem', sm: '0' }
+                        }}
+                      >
+                        {assignment.title}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight="bold"
+                        gutterBottom
+                        sx={{
+                          fontSize: { xs: '0.875rem', sm: '1rem' } // Adjust font size for smaller screens
+                        }}
+                      >
+                        Assigned by: {`${assignment.addedBy.user.firstName} ${assignment.addedBy.user.lastName}`}
+                      </Typography>
+                      <Typography
                         variant="body2"
-                        color="textSecondary"
+                        color="text.secondary"
                         gutterBottom
                         sx={{
                           fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
                         }}
                       >
-                        Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
+                        Assigned On: {new Date(assignment.addedBy.createdAt).toLocaleDateString()}
                       </Typography>
-                      <Box
+                      <Typography
+                        variant="body1"
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          // flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
-                          gap: '2rem' // Space between buttons
+                          marginTop: 2,
+                          marginBottom: 2,
+                          fontSize: '0,8rem',
+                          textAlign: 'justify'
                         }}
                       >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          startIcon={<CloudDownloadIcon />}
-                          onClick={() => handleDownload(assignment.attachmentUrl, assignment.title)}
-                          sx={{
-                            padding: '0.75rem 1.5rem',
-                            fontWeight: 'bold',
-                            backgroundColor: '#1976D2',
-                            '&:hover': {
-                              backgroundColor: '#1565C0'
-                            },
-                            width: '100%' // Ensure the button width is consistent
-                          }}
-                        >
-                          Download
-                        </Button>
+                        {truncateText(assignment.description, 500)}
+                      </Typography>
 
-                        <Button
-                          variant="outlined"
-                          color="success"
-                          backgroundColor="#1976D2"
+                      <Box
+                        sx={{
+                          marginTop: 'auto',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'baseline',
+                          flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
+                          gap: { xs: '1rem', sm: '0' } // Space between buttons on small screens
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          gutterBottom
                           sx={{
-                            borderRadius: 1,
-                            textTransform: 'none',
-                            width: '100%' // Ensure the button width is consistent
+                            fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
                           }}
-                          onClick={() => handleOpenModal(assignment.id)}
                         >
-                          View More
-                        </Button>
+                          Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            // flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
+                            gap: '2rem' // Space between buttons
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<CloudDownloadIcon />}
+                            onClick={() => handleDownload(assignment.attachmentUrl, assignment.title)}
+                            sx={{
+                              padding: '0.75rem 1.5rem',
+                              fontWeight: 'bold',
+                              backgroundColor: '#1976D2',
+                              '&:hover': {
+                                backgroundColor: '#1565C0'
+                              },
+                              width: '100%' // Ensure the button width is consistent
+                            }}
+                          >
+                            Download
+                          </Button>
+
+                          <Button
+                            variant="outlined"
+                            color="success"
+                            backgroundColor="#1976D2"
+                            sx={{
+                              borderRadius: 1,
+                              textTransform: 'none',
+                              width: '100%' // Ensure the button width is consistent
+                            }}
+                            onClick={() => handleOpenModal(assignment.id)}
+                          >
+                            View More
+                          </Button>
+                        </Box>
                       </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )})}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
           <Box mt={3}>
             <TablePagination

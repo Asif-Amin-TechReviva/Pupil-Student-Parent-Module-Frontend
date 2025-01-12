@@ -1,55 +1,55 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 
 const SwitchButton = ({ activeTab, setActiveTab }) => {
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "120px",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '120px'
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderRadius: "20px",
-          width: "30%",
-          height: "40px",
-          backgroundColor: "#d3d3d3",
-          position: "relative",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-          overflow: "hidden",
-          cursor: "pointer",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderRadius: '20px',
+          height: '40px',
+          backgroundColor: '#d3d3d3',
+          position: 'relative',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          width: { xs: '95%', sm: '60%', md: '50%' } // Responsive width
         }}
       >
         {/* Toggle Indicator */}
         <Box
           sx={{
-            position: "absolute",
+            position: 'absolute',
             top: 0,
-            left: activeTab === "ongoing" ? "0%" : "50%",
-            width: "50%",
-            height: "100%",
-            backgroundColor: "#4285F4",
-            borderRadius: "20px",
-            transition: "left 0.3s ease-in-out",
+            left: activeTab === 'ongoing' ? '0%' : '50%',
+            width: '50%',
+            height: '100%',
+            backgroundColor: '#4285F4',
+            borderRadius: '20px',
+            transition: 'left 0.3s ease-in-out'
           }}
         ></Box>
 
         {/* Ongoing */}
         <Box
-          onClick={() => setActiveTab("ongoing")}
+          onClick={() => setActiveTab('ongoing')}
           sx={{
-            width: "50%",
-            textAlign: "center",
+            width: '50%',
+            textAlign: 'center',
             zIndex: 1,
-            color: activeTab === "ongoing" ? "#fff" : "#000",
-            fontWeight: "bold",
-            transition: "color 0.3s ease",
+            color: activeTab === 'ongoing' ? '#fff' : '#000',
+            fontWeight: 'bold',
+            transition: 'color 0.3s ease'
           }}
         >
           <Typography variant="body1">Ongoing</Typography>
@@ -57,14 +57,14 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
 
         {/* Previous */}
         <Box
-          onClick={() => setActiveTab("previous")}
+          onClick={() => setActiveTab('previous')}
           sx={{
-            width: "50%",
-            textAlign: "center",
+            width: '50%',
+            textAlign: 'center',
             zIndex: 1,
-            color: activeTab === "previous" ? "#fff" : "#000",
-            fontWeight: "bold",
-            transition: "color 0.3s ease",
+            color: activeTab === 'previous' ? '#fff' : '#000',
+            fontWeight: 'bold',
+            transition: 'color 0.3s ease'
           }}
         >
           <Typography variant="body1">Over</Typography>
