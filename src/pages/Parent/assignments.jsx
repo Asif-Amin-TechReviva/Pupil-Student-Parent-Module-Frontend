@@ -76,12 +76,15 @@ const Assignments = ({ getPageCount }) => {
     }
   };
   // Fetch assignment details
-  const handleOpenModal = async (assignmentId) => {
+  const handleOpenModal = async (assignmentId, assignmentData) => {
     try {
       setModalLoading(true);
       setOpenModal(true);
       const response = await FetchAssignmentDetails(assignmentId);
-      setSelectedAssignment(response);
+      setSelectedAssignment({
+        ...response,
+        ...assignmentData
+      });
     } catch (error) {
       console.error('Failed to fetch assignment details:', error);
       toast.error('Failed to load assignment details.');
@@ -331,7 +334,11 @@ const Assignments = ({ getPageCount }) => {
                               textTransform: 'none',
                               width: '100%' // Ensure the button width is consistent
                             }}
-                            onClick={() => handleOpenModal(assignment.id)}
+                            onClick={() =>
+                              handleOpenModal(assignment.id, {
+                                addedBy: `${assignment.addedBy.user.firstName} ${assignment.addedBy.user.lastName}`
+                              })
+                            }
                           >
                             View More
                           </Button>
@@ -378,37 +385,36 @@ const Assignments = ({ getPageCount }) => {
 
       <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
         <Box
-  display="flex"
-  justifyContent={{ xs: 'center', sm: 'space-between' }}
-  alignItems="center"
-  sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem' } }}
->
-  <DialogTitle
-    sx={{
-      fontWeight: 'bold',
-      fontSize: { xs: '1rem', sm: '1.5rem' },
-      color: '#1976D2',
-      textAlign: { xs: 'left', sm: 'left' }, 
-      flexGrow: 1,
-    }}
-  >
-    Assignment Details
-  </DialogTitle>
-  <Button
-    onClick={handleCloseModal}
-    color="error"
-    variant="outlined"
-    sx={{
-      marginTop: { xs: '1rem', sm: 0 }, // Add margin on small screens to separate it from the title
-      padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' },
-      fontSize: { xs: '0.875rem', sm: '1rem' },
-      alignSelf: { xs: 'center', sm: 'flex-end' }, // Center button on small screens
-    }}
-  >
-    Close
-  </Button>
-</Box>
-
+          display="flex"
+          justifyContent={{ xs: 'center', sm: 'space-between' }}
+          alignItems="center"
+          sx={{ padding: { xs: '0.5rem 1rem', sm: '1rem' } }}
+        >
+          <DialogTitle
+            sx={{
+              fontWeight: 'bold',
+              fontSize: { xs: '1rem', sm: '1.5rem' },
+              color: '#1976D2',
+              textAlign: { xs: 'left', sm: 'left' },
+              flexGrow: 1
+            }}
+          >
+            Assignment Details
+          </DialogTitle>
+          <Button
+            onClick={handleCloseModal}
+            color="error"
+            variant="outlined"
+            sx={{
+              marginTop: { xs: '1rem', sm: 0 }, // Add margin on small screens to separate it from the title
+              padding: { xs: '0.5rem 1rem', sm: '0.75rem 1.5rem' },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              alignSelf: { xs: 'center', sm: 'flex-end' } // Center button on small screens
+            }}
+          >
+            Close
+          </Button>
+        </Box>
 
         <DialogContent
           sx={{
@@ -430,6 +436,9 @@ const Assignments = ({ getPageCount }) => {
               <Box>
                 <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ textAlign: 'center', color: '#333', paddingTop: '15px' }}>
                   {selectedAssignment.title}
+                </Typography>
+                <Typography variant="body2" paragraph sx={{ lineHeight: 1.6, color: '#222', textAlign: 'justify', fontWeight: 'bold' }}>
+                  Assigned by: {selectedAssignment?.addedBy || 'No data available'}
                 </Typography>
 
                 <Typography variant="body6" paragraph sx={{ lineHeight: 1.6, color: '#555', textAlign: 'justify' }}>

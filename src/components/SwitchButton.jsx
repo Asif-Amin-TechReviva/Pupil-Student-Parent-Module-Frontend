@@ -8,7 +8,7 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: { xs: '60px',  md: '120px' }
+        height: { xs: '60px', md: '120px' }
       }}
     >
       <Box
@@ -16,7 +16,7 @@ const SwitchButton = ({ activeTab, setActiveTab }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderRadius:  '20px' ,
+          borderRadius: '20px',
           height: '40px',
           backgroundColor: '#d3d3d3',
           position: 'relative',
