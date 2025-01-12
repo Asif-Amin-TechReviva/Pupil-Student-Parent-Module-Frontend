@@ -29,7 +29,7 @@ const subjectColors = {
   Islamiyat: '#FFC107',
   Hindi: '#222'
 };
-const Assignments = ({ getPageCount }) => {
+const Assignments = () => {
   const theme = useTheme();
 
   // State

@@ -25,7 +25,7 @@ const PaymentTable = () => {
 
       const data = await FetchPaymentDetails(id, pageIndex + 1, pageSize, globalFilter);
       setPaymentDetails(data.data || []);
-      setTotalRows(data.totalRecords || 0); // Assuming the API response includes `totalRecords`
+      setTotalRows(data?.meta?.pageCount); // Assuming the API response includes `totalRecords`
     } catch (error) {
       console.error('Error fetching payment details:', error);
     } finally {
@@ -139,7 +139,7 @@ const PaymentTable = () => {
       </TableContainer>
       <Box sx={{ p: 2 }}>
         <TablePagination
-          getPageCount={() => Math.ceil(totalRows / pageSize)}
+          getPageCount={() => Math.ceil(totalRows)}
           setPageIndex={setPageIndex}
           setPageSize={setPageSize}
           getState={() => ({
