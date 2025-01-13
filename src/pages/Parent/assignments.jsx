@@ -23,11 +23,15 @@ import SwitchButton from 'components/SwitchButton';
 import TablePagination from 'components/third-party/react-table/TablePagination';
 import SearchIcon from '@mui/icons-material/Search';
 const subjectColors = {
-  Rhymes: '#FF5722',
-  Science: '#4CAF50',
-  History: '#2196F3',
-  Islamiyat: '#FFC107',
-  Hindi: '#222'
+  Rhymes: '#FFB27D',
+  Science: '#88C0A8',
+  History: '#5A86AD',
+  Islamiyat: '#E8C676',
+  Hindi: '#707070',
+  English: '#7E94D1',
+  Mathematics: '#B39DDB',
+  Urdu: '#6BA89A',
+  SocialScience: '#F7D794'
 };
 const Assignments = () => {
   const theme = useTheme();
@@ -168,8 +172,7 @@ const Assignments = () => {
             },
             '& .MuiInputLabel-root.Mui-focused': {
               color: '#1565C0' // Darker blue for focused label
-           
-          }
+            }
           }}
           InputProps={{
             endAdornment: (
@@ -244,7 +247,7 @@ const Assignments = () => {
                           fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Adjust font size for smaller screens
                           overflowWrap: 'break-word', // Prevents overflow of title on smaller screens
                           wordBreak: 'break-word', // Ensures the title breaks on long words
-                          marginTop: { xs: '2rem', sm: '2rem', md :"0" }
+                          marginTop: { xs: '2rem', sm: '2rem', md: '0' }
                         }}
                       >
                         {assignment.title}

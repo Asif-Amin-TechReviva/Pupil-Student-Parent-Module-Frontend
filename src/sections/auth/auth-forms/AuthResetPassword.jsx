@@ -90,15 +90,11 @@ export default function AuthResetPassword() {
         }}
         validationSchema={Yup.object().shape({
           password: Yup.string()
-            .min(6, 'Password must be at least 6 characters')
-            .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
-            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
-            .matches(/[0-9]/, 'Password must contain at least one number')
-            .matches(/[@$!%*?&]/, 'Password must contain at least one special character')
-            .required('Password is required'),
+            .min(8, 'Password must be at least 8 characters')
+            .matches(/^\S*$/, 'Password cannot contain whitespace'), // Disallow whitespace
           confirmPassword: Yup.string()
             .required('Confirm Password is required')
-            .test('confirmPassword', 'Both Password must be match!', (confirmPassword, yup) => yup.parent.password === confirmPassword)
+            .oneOf([Yup.ref('password'), null], 'Both Passwords must match!') // Ensures passwords match
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {

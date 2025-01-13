@@ -142,7 +142,7 @@ export default function AuthLogin({ forgot }) {
                   />
 
                   <Link variant="h6" component={RouterLink} to={isLoggedIn && forgot ? forgot : '/forgot-password'} color="text.primary">
-                    Forgot Password?
+                    Forgot or Set Password?
                   </Link>
                 </Stack>
               </Grid>
