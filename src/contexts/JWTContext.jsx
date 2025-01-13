@@ -44,11 +44,9 @@ export const JWTProvider = ({ children }) => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
         if (accessToken && verifyToken(accessToken)) {
-          // if (accessToken) {
           setSession(accessToken);
-          const userDetailsString = localStorage.getItem('userDetails');
+          const userDetailsString = sessionStorage.getItem('user');
           const user = userDetailsString ? JSON.parse(userDetailsString) : null;
-          // alert('helloo')
           dispatch({
             type: LOGIN,
             payload: {
@@ -57,7 +55,6 @@ export const JWTProvider = ({ children }) => {
             }
           });
         } else {
-          // alert('hdhhdhhdh')
           dispatch({
             type: LOGOUT
           });
@@ -193,21 +190,20 @@ export const JWTProvider = ({ children }) => {
   };
 
   const sendOtp = async (email) => {
-    console.log('email - ', email);
-    window.localStorage.setItem('email', email);
+    
+    window.localStorage.setItem('ResendEmail', email);
 
     try {
-      const response = await axios.post('/auth/send-OTP', { email });
+      const response = await axios.post('/auth/forgot-password', { email });
       return response.data; 
       
     } catch (error) {
       throw new Error(error.response ? error.response.data.message : error.message);
     }
   };
-  const verifyOtp = async (email, OTP) => {
+  const verifyOtp = async (OTP) => {
     try {
-      const response = await axios.post('/auth/verify-OTP', {
-        email,
+      const response = await axios.post('/auth/verify-otp', {
         OTP
       });
       window.localStorage.setItem('resetToken', response.data.data.token);
@@ -229,7 +225,7 @@ export const JWTProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error resetting password:', error);
-      return { success: false, message: error.response?.data?.message || 'Failed to reset password' };
+      return { success: false, message: error.response?.message || 'Failed to reset password' };
     }
   };
 

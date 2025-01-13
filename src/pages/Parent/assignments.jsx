@@ -141,17 +141,18 @@ const Assignments = () => {
     <div>
       <QuichLinks />
       <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} />
-      <Box mt={1} mb={2} display="flex" justifyContent="left" alignItems="center">
+      <Box mt={1} mb={2} display="flex" justifyContent="right" alignItems="center">
         <TextField
           variant="outlined"
           value={persistedSearchText}
           onChange={handleSearchChange}
           placeholder="Search By Title or Subject"
           sx={{
-            width: '100%',
+            width: { xs: '100%', sm: '20%' },
             '& .MuiOutlinedInput-root': {
               backgroundColor: '#fff',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+              borderRadius: { xs: '10px', sm: '25px' },
               '&:hover': {
                 backgroundColor: '#ffffff',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' // More pronounced shadow on hover
@@ -167,7 +168,8 @@ const Assignments = () => {
             },
             '& .MuiInputLabel-root.Mui-focused': {
               color: '#1565C0' // Darker blue for focused label
-            }
+           
+          }
           }}
           InputProps={{
             endAdornment: (
@@ -242,7 +244,7 @@ const Assignments = () => {
                           fontSize: { xs: '1.25rem', sm: '1.5rem' }, // Adjust font size for smaller screens
                           overflowWrap: 'break-word', // Prevents overflow of title on smaller screens
                           wordBreak: 'break-word', // Ensures the title breaks on long words
-                          marginTop: { xs: '2rem', sm: '0' }
+                          marginTop: { xs: '2rem', sm: '2rem', md :"0" }
                         }}
                       >
                         {assignment.title}

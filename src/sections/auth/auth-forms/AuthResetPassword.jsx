@@ -29,7 +29,31 @@ import { openSnackbar } from 'api/snackbar';
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
 
+// Add axios import here
+import axiosServices from 'utils/axios';
+
 // ============================|| FIREBASE - RESET PASSWORD ||============================ //
+const resetPassword = async (newPassword, token) => {
+  try {
+    const response = await axiosServices.post('/auth/reset-password', {
+      newPassword,
+      token
+    });
+
+    // Make sure to check if the response status and response data are as expected
+    if (response.status === 200 && response.data?.success) {
+      return { success: true, message: response.data.message || 'Password reset successfully' };
+    }
+
+    return { success: false, message: response.data?.message || 'Unexpected response from server' };
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    return {
+      success: false,
+      message: error.response?.data?.message || 'Failed to reset password'
+    };
+  }
+};
 
 export default function AuthResetPassword() {
   const scriptedRef = useScriptRef();
@@ -65,45 +89,93 @@ export default function AuthResetPassword() {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          password: Yup.string().max(255).required('Password is required'),
+          password: Yup.string()
+            .min(6, 'Password must be at least 6 characters')
+            .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+            .matches(/[0-9]/, 'Password must contain at least one number')
+            .matches(/[@$!%*?&]/, 'Password must contain at least one special character')
+            .required('Password is required'),
           confirmPassword: Yup.string()
             .required('Confirm Password is required')
             .test('confirmPassword', 'Both Password must be match!', (confirmPassword, yup) => yup.parent.password === confirmPassword)
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            // password reset
-            if (scriptedRef.current) {
+            const token = window.localStorage.getItem('resetToken');
+            const response = await resetPassword(values.password, token);
+
+            // Log the response to ensure you're getting the expected result
+            console.log('Reset password response: ', response);
+
+            // Check if the response message includes "Password reset successfully" (even if success is false)
+            if (response.message.toLowerCase().includes('password reset successfully')) {
               setStatus({ success: true });
               setSubmitting(false);
 
+              // Show success snackbar
               openSnackbar({
                 open: true,
-                message: 'Successfuly reset password.',
+                message: 'password reset successfully" ',
                 variant: 'alert',
-
                 alert: {
                   color: 'success'
                 }
               });
 
               setTimeout(() => {
-                navigate(isLoggedIn ? '/auth/login' : '/login', { replace: true });
+                navigate('/login', { replace: true });
               }, 1500);
+            } else {
+              setStatus({ success: false, errorMessage: response.message || 'Failed to reset password.' });
+              setSubmitting(false);
+
+              openSnackbar({
+                open: true,
+                message: response.message || 'Failed to reset password.',
+                variant: 'alert',
+                alert: {
+                  color: 'error'
+                }
+              });
             }
           } catch (err) {
             console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+
+            setStatus({ success: false, errorMessage: err.message || 'An unexpected error occurred.' });
+            setSubmitting(false);
+
+            openSnackbar({
+              open: true,
+              message: err.message || 'An unexpected error occurred.',
+              variant: 'alert',
+              alert: {
+                color: 'error'
+              }
+            });
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        {({ status, errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+              {/* Status Messages */}
+              {status && status.success && (
+                <Grid item xs={12}>
+                  <Typography variant="body2" color="success">
+                    Password reset successfully! Please check your email.
+                  </Typography>
+                </Grid>
+              )}
+              {status && status.errorMessage && (
+                <Grid item xs={12}>
+                  <Typography variant="body2" color="error">
+                    {status.errorMessage}
+                  </Typography>
+                </Grid>
+              )}
+
+              {/* Password Field */}
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="password-reset">Password</InputLabel>
@@ -153,6 +225,8 @@ export default function AuthResetPassword() {
                   </Grid>
                 </FormControl>
               </Grid>
+
+              {/* Confirm Password Field */}
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="confirm-password-reset">Confirm Password</InputLabel>
@@ -175,6 +249,7 @@ export default function AuthResetPassword() {
                 )}
               </Grid>
 
+              {/* Submit Button */}
               {errors.submit && (
                 <Grid item xs={12}>
                   <FormHelperText error>{errors.submit}</FormHelperText>

@@ -25,7 +25,7 @@ export default function AuthForgotPassword() {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
 
-  const { isLoggedIn, resetPassword } = useAuth();
+  const { isLoggedIn, sendOtp } = useAuth();
 
   return (
     <>
@@ -39,7 +39,7 @@ export default function AuthForgotPassword() {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            await resetPassword(values.email).then(
+            await sendOtp(values.email).then(
               () => {
                 setStatus({ success: true });
                 setSubmitting(false);
@@ -53,20 +53,15 @@ export default function AuthForgotPassword() {
                   }
                 });
                 setTimeout(() => {
-                  // navigate('/auth/code-verification', { state: { isAuthenticating: true } });
+                  navigate('/auth/code-verification', { state: { isAuthenticating: true } });
                   // navigate(isLoggedIn ? '/auth/check-mail' : '/check-mail', { replace: true });
                 }, 1500);
-
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
               },
-              // (err) => {
-              //   setStatus({ success: false });
-              //   setErrors({ submit: err.message });
-              //   setSubmitting(false);
-              // }
+              (err) => {
+                setStatus({ success: false });
+                setErrors({ submit: err.message });
+                setSubmitting(false);
+              }
             );
           } catch (err) {
             console.error(err);
