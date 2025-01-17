@@ -44,24 +44,27 @@ export default function AuthLogin({ forgot }) {
           password: '',
           submit: null
         }}
-        // validationSchema={Yup.object().shape({
-        //   schoolId: Yup.string().schoolId('Must be a valid schoolId').max(255).required('schoolId is required'),
-        //   password: Yup.string().max(255).required('Password is required')
-        // })}
+        validationSchema={Yup.object().shape({
+          schoolId: Yup.string()
+            .max(30, 'School ID must not exceed 30 characters')
+            .required('School ID is required'),
+          password: Yup.string()
+            .max(30, 'Password must not exceed 30 characters')
+            .required('Password is required')
+        })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             await login(values.schoolId, values.password);
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
-              // navigation('/auth/code-verification');
-              // Redirect or handle successful login
+              
             }
           } catch (err) {
             console.error(err);
             if (scriptedRef.current) {
               setStatus({ success: false });
-              setErrors({ submit: 'Login failed. Please check your credentials.' });
+              setErrors({ submit: err.message });
               setSubmitting(false);
             }
           }
@@ -72,7 +75,7 @@ export default function AuthLogin({ forgot }) {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="schoolId-login">School Id</InputLabel>
+                  <InputLabel htmlFor="schoolId-login">School ID</InputLabel>
                   <OutlinedInput
                     id="schoolId-login"
                     type="schoolId"
@@ -80,7 +83,7 @@ export default function AuthLogin({ forgot }) {
                     name="schoolId"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter schoolId address"
+                    placeholder="Enter school ID "
                     fullWidth
                     error={Boolean(touched.schoolId && errors.schoolId)}
                   />

@@ -109,7 +109,7 @@ export default function AuthForgotPassword() {
               <Grid item xs={12}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    Send Password Reset Email
+                    Send OTP
                   </Button>
                 </AnimateButton>
               </Grid>

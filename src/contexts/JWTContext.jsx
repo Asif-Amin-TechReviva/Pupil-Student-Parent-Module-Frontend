@@ -4,8 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { LOGIN, LOGOUT } from 'contexts/auth-reducer/actions';
 import authReducer from 'contexts/auth-reducer/auth';
 import Loader from 'components/Loader';
-import axios from 'utils/axios'; // Make sure axios is configured correctly
-import { Link as RouterLink, useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'utils/axios';
 
 const chance = new Chance();
 
@@ -69,37 +68,6 @@ export const JWTProvider = ({ children }) => {
 
     init();
   }, []);
-
- 
-  
-
-  // const login = async (schoolId, password) => {
-  //   try {
-  //     const response = await axios.post('/student/login', {
-  //       schoolId,
-  //       password
-  //     });
-  //     const accessToken= response.data.data.accessToken;
-  //     const user= response.data.data.user;
-  //     const id= response.data.data.user.id;
-  //     console.log("getting student id after login",id)
-  //     localStorage.setItem('studentId', id);
-  //     setSession(accessToken);
-  //     dispatch({
-  //       type: LOGIN,
-  //       payload: {
-  //         isLoggedIn: true,
-  //         user,
-
-  //       }
-  //     });
-  //     console.log(user)
-
-  //   } catch (err) {
-  //     console.error('Login error:', err);
-  //     throw err;
-  //   }
-  // };
 
 
   const login = async (schoolId, password) => {
