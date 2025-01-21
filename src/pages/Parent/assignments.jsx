@@ -23,15 +23,15 @@ import SwitchButton from 'components/SwitchButton';
 import TablePagination from 'components/third-party/react-table/TablePagination';
 import SearchIcon from '@mui/icons-material/Search';
 const subjectColors = {
-  Rhymes: '#FFB27D',
-  Science: '#88C0A8',
-  History: '#5A86AD',
-  Islamiyat: '#E8C676',
-  Hindi: '#707070',
-  English: '#7E94D1',
-  Mathematics: '#B39DDB',
-  Urdu: '#6BA89A',
-  SocialScience: '#F7D794'
+  Rhymes: '#FF9A5A',
+  Science: '#4B8B68',
+  History: '#2E5A84',
+  Islamiyat: '#C89200',
+  Hindi: '#3B3B3B',
+  English: '#3E63AF',
+  Mathematics: '#714AC6',
+  Urdu: '#337367',
+  SocialScience: '#E18E1E'
 };
 const Assignments = () => {
   const theme = useTheme();
@@ -60,7 +60,7 @@ const Assignments = () => {
         pageIndex + 1,
         pageSize,
         searchText.trim(), // Pass search text (trimmed for clean input)
-        'desc',
+        'asc',
         status
       );
       let fetchedAssignments = response?.data?.data || [];
@@ -250,7 +250,8 @@ const Assignments = () => {
                           marginTop: { xs: '2rem', sm: '2rem', md: '0' }
                         }}
                       >
-                        {assignment.title}
+                        {truncateText(assignment.title, 20)}
+                        {/* {truncateText(assignment.description, 500)} */}
                       </Typography>
                       <Typography
                         variant="body1"
@@ -302,14 +303,14 @@ const Assignments = () => {
                             fontSize: { xs: '0.75rem', sm: '0.875rem' } // Adjust font size for smaller screens
                           }}
                         >
-                          Last Date of Submission: {new Date(assignment.dueDate).toLocaleDateString()}
+                          Due Date: {new Date(assignment.dueDate).toLocaleDateString()}
                         </Typography>
+
                         <Box
                           sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
-                            // flexDirection: { xs: 'column', sm: 'row' }, // Stack buttons on smaller screens
-                            gap: '2rem' // Space between buttons
+                            gap: { xs: '5rem', sm: '1rem', md: '2rem' }
                           }}
                         >
                           <Button
@@ -318,13 +319,14 @@ const Assignments = () => {
                             startIcon={<CloudDownloadIcon />}
                             onClick={() => handleDownload(assignment.attachmentUrl, assignment.title)}
                             sx={{
-                              padding: '0.75rem 1.5rem',
+                              padding: { xs: '.4rem .8rem', sm: '.5rem 1rem', md: '1rem 1.5rem' },
+                              fontSize: { xs: '1rem', sm: '0.75rem', md: '0.85rem' },
                               fontWeight: 'bold',
                               backgroundColor: '#1976D2',
                               '&:hover': {
                                 backgroundColor: '#1565C0'
                               },
-                              width: '100%' // Ensure the button width is consistent
+                              minWidth: 'auto' // Prevents a large default width
                             }}
                           >
                             Download
@@ -333,11 +335,12 @@ const Assignments = () => {
                           <Button
                             variant="outlined"
                             color="success"
-                            backgroundColor="#1976D2"
                             sx={{
+                              padding: { xs: '.4rem .8rem', sm: '.5rem 1rem', md: '.5rem 1rem' },
+                              fontSize: { xs: '1rem', sm: '0.75rem', md: '0.85rem' },
                               borderRadius: 1,
                               textTransform: 'none',
-                              width: '100%' // Ensure the button width is consistent
+                              minWidth: 'auto' // Prevents a large default width
                             }}
                             onClick={() =>
                               handleOpenModal(assignment.id, {

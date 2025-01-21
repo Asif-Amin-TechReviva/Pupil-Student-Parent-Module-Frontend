@@ -9,7 +9,7 @@ const PaymentTable = () => {
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0); // For total record count
+  const [totalRows, setTotalRows] = useState(0); 
 
   // Pagination state
   const [pageIndex, setPageIndex] = useState(0);
@@ -25,7 +25,7 @@ const PaymentTable = () => {
 
       const data = await FetchPaymentDetails(id, pageIndex + 1, pageSize, globalFilter);
       setPaymentDetails(data.data || []);
-      setTotalRows(data?.meta?.pageCount); // Assuming the API response includes `totalRecords`
+      setTotalRows(data?.meta?.pageCount); 
     } catch (error) {
       console.error('Error fetching payment details:', error);
     } finally {
@@ -35,7 +35,7 @@ const PaymentTable = () => {
 
   useEffect(() => {
     fetchPaymentData();
-  }, [pageIndex, pageSize, globalFilter]); // Re-fetch data when pagination or filters change
+  }, [pageIndex, pageSize, globalFilter]);
 
   const columns = React.useMemo(
     () => [
