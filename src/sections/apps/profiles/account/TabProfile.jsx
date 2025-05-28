@@ -230,7 +230,6 @@ export default function TabProfile() {
       mother: mother || '',
       DOB: DOB ? new Date(DOB).toISOString().split('T')[0] : '',
       presentAddress: presentAddress || '',
-      phone: phone || '',
       email: email || ''
     });
     setIsEditing(true);
@@ -250,9 +249,7 @@ export default function TabProfile() {
         mother: editedData.mother || mother,
         DOB: editedData.DOB || DOB,
         presentAddress: editedData.presentAddress || presentAddress,
-        phone: editedData.phone || phone,
-        email: editedData.email || email,
-        // photo: profileImage
+        email: editedData.email || email
       };
 
       await UpdateStudent(payload);
@@ -314,7 +311,7 @@ export default function TabProfile() {
       </Box>
     );
   }
-console.log(profileImage,'url for image')
+  console.log(profileImage, 'url for image');
   return (
     <Grid container spacing={3}>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -332,7 +329,7 @@ console.log(profileImage,'url for image')
                       <Avatar
                         alt="Avatar"
                         size="xl"
-                        src={studentData.photo}
+                        src={studentData?.photo}
                         sx={{
                           width: 120,
                           height: 120,
@@ -494,20 +491,10 @@ console.log(profileImage,'url for image')
                     <Grid item xs={12} md={6}>
                       <Stack spacing={0.5}>
                         <Typography color="secondary">Phone</Typography>
-                        {isEditing ? (
-                          <PatternFormat
-                            format="#### ### ###"
-                            mask="_"
-                            customInput={TextField}
-                            fullWidth
-                            value={editedData.phone || ''}
-                            onChange={(e) => handleFieldChange('phone', e.target.value)}
-                          />
-                        ) : (
-                          <Typography sx={{ fontWeight: 500 }}>
-                            <PatternFormat value={phone} displayType="text" type="text" format="#### ### ###" />
-                          </Typography>
-                        )}
+
+                        <Typography sx={{ fontWeight: 500 }}>
+                          <PatternFormat value={phone} displayType="text" type="text" format="#### ### ###" />
+                        </Typography>
                       </Stack>
                     </Grid>
                     <Grid item xs={12} md={6}>
