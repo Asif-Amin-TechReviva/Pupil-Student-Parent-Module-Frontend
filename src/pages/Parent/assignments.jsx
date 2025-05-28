@@ -50,7 +50,7 @@ const Assignments = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalPageCount, setTotalPageCount] = useState(0);
-
+  const switchNames = 'fromAssignments';
   // Fetch assignments
   const fetchAssignments = async () => {
     setLoading(true);
@@ -138,13 +138,13 @@ const Assignments = () => {
   };
   const handleSearchChange = (event) => {
     const value = event.target.value;
-    setSearchText(value); // Update search text
-    setPersistedSearchText(value); // Keep it persisted across tabs
+    setSearchText(value);
+    setPersistedSearchText(value);
   };
   return (
     <div>
       <QuichLinks />
-      <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} />
+      <SwitchButton activeTab={activeTab} setActiveTab={(tab) => setActiveTab(tab)} switchNames={switchNames} />
       <Box mt={1} mb={2} display="flex" justifyContent="right" alignItems="center">
         <TextField
           variant="outlined"
@@ -155,7 +155,7 @@ const Assignments = () => {
             width: { xs: '100%', sm: '20%' },
             '& .MuiOutlinedInput-root': {
               backgroundColor: '#fff',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
               borderRadius: { xs: '10px', sm: '25px' },
               '&:hover': {
                 backgroundColor: '#ffffff',

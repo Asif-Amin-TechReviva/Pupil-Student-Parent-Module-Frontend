@@ -13,11 +13,29 @@ import { APP_DEFAULT_PATH } from 'config';
 
 // assets
 import { DocumentText, Lock, Profile, Profile2User, Setting3, TableDocument } from 'iconsax-react';
+import { FetchStudentDetails } from 'api/myDetails';
 
 // ==============================|| PROFILE - ACCOUNT ||============================== //
 
 export default function AccountProfile() {
+  const [studentData, setStudentData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
+  const fetchStudentDetails = async () => {
+    try {
+      setLoading(true);
+      const data = await FetchStudentDetails();
+      setStudentData(data);
+    } catch (e) {
+      console.error('Failed to fetch student details:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudentDetails();
+  }, []);
 
   let selectedTab = 0;
   let breadcrumbTitle = '';
@@ -80,18 +98,18 @@ export default function AccountProfile() {
     <>
       <Breadcrumbs custom heading={breadcrumbHeading} links={breadcrumbLinks} />
       <MainCard border={false}>
-        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}> */}
-          {/* <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab"> */}
-            {/* <Tab label="Profile" component={Link} to="/apps/profiles/account/basic" icon={<Profile />} iconPosition="start" /> */}
-            {/* <Tab label="Personal" component={Link} to="/apps/profiles/account/personal" icon={<DocumentText />} iconPosition="start" />
-            <Tab label="My Account" component={Link} to="/apps/profiles/account/my-account" icon={<TableDocument />} iconPosition="start" />
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
+          <Tabs value={value} onChange={handleChange} variant="scrollable" scrollButtons="auto" aria-label="account profile tab">
+            <Tab label="Profile" component={Link} to="/apps/profiles/account/basic" icon={<Profile />} iconPosition="start" />
+            {/* <Tab label="Personal" component={Link} to="/apps/profiles/account/personal" icon={<DocumentText />} iconPosition="start" /> */}
+            {/* <Tab label="My Account" component={Link} to="/apps/profiles/account/my-account" icon={<TableDocument />} iconPosition="start" /> */}
             <Tab label="Change Password" component={Link} to="/apps/profiles/account/password" icon={<Lock />} iconPosition="start" />
-            <Tab label="Role" component={Link} to="/apps/profiles/account/role" icon={<Profile2User />} iconPosition="start" />
-            <Tab label="Settings" component={Link} to="/apps/profiles/account/settings" icon={<Setting3 />} iconPosition="start" /> */}
-          {/* </Tabs> */}
-        {/* </Box> */}
+            {/* <Tab label="Role" component={Link} to="/apps/profiles/account/role" icon={<Profile2User />} iconPosition="start" /> */}
+            <Tab label="Settings" component={Link} to="/apps/profiles/account/settings" icon={<Setting3 />} iconPosition="start" />
+          </Tabs>
+        </Box>
         <Box sx={{ mt: 2.5 }}>
-          <Outlet />
+          <Outlet context={{ studentData, loading, refetch: fetchStudentDetails }} />
         </Box>
       </MainCard>
     </>

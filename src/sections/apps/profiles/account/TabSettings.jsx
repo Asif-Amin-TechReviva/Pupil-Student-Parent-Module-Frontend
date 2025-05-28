@@ -67,7 +67,7 @@ export default function TabSettings() {
               </Stack>
             </MainCard>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <MainCard title="Updates from System Notification">
               <Stack spacing={2.5}>
                 <Typography variant="subtitle1">Email you with?</Typography>
@@ -97,10 +97,10 @@ export default function TabSettings() {
                 </List>
               </Stack>
             </MainCard>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      {/* <Grid item xs={12} sm={6}>
         <MainCard title="Activity Related Emails">
           <Stack spacing={2.5}>
             <Typography variant="subtitle1">When to email?</Typography>
@@ -177,7 +177,7 @@ export default function TabSettings() {
             </List>
           </Stack>
         </MainCard>
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
           <Button variant="outlined" color="secondary">

@@ -28,16 +28,17 @@ const Academics= {
       children: [
         {
           id: 'View Assignments',
-          title: <FormattedMessage id="View Assignments" />,
+          title: <FormattedMessage id="Assignments" />,
           type: 'item',
           url: '/academics/view-assignments',
           // target: true
         },
         {
           id: 'Grades',
-          title: <FormattedMessage id="View Grades" />,
+          title: <FormattedMessage id="Grades" />,
           type: 'item',
           url: '/academics/view-grades',
+          breadcrumbs: false,
           // target: true
         },
         // {

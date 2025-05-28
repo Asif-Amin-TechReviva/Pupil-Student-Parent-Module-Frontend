@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const axiosServices = axios.create({ baseURL: import.meta.env.VITE_APP_API_BASE_URL || 'https://api.pupil.techreviva.com/v1' });
-
 // ==============================|| AXIOS - FOR MOCK SERVICES ||============================== //
 
 axiosServices.interceptors.request.use(

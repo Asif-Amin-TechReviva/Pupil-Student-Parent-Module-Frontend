@@ -23,7 +23,7 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 // render - applications
 import PaymentTable from 'pages/Parent/paymentTable';
 import Assignments from 'pages/Parent/assignments';
-import Grades from 'pages/Parent/grades';
+import GradesIndex from 'pages/Parent/grades/GradesIndex';
 const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 const AppCalendar = Loadable(lazy(() => import('pages/apps/calendar')));
 
@@ -178,7 +178,7 @@ const MainRoutes = {
           },
           {
           path:'view-grades',
-          element:<Grades/>
+          element:<GradesIndex/>
           }
         ]
         },
