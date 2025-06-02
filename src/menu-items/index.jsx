@@ -13,11 +13,12 @@ import Academics from './academics';
 import ResourceSharing from './resource-sharing';
 import Communication from './communication';
 import BusCancelation from './busCancelation';
+import AttendanceAndLeave from './attendanceAndLeave';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [Fee, Academics ]
+  items: [Fee, Academics,AttendanceAndLeave ]
   // items: [Home, Fee, Academics, ResourceSharing, Communication, BusCancelation]
 };
 //Fee,ResourceSharing, Communication, BusCancelation
