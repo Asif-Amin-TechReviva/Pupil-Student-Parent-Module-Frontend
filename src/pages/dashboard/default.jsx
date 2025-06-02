@@ -19,6 +19,7 @@ import TotalIncome from 'sections/widget/chart/TotalIncome';
 // assets
 // import { ArrowDown, ArrowUp, Book, Calendar, CloudChange, Wallet3 } from 'iconsax-react';
 import QuichLinks from 'components/QuickLinks';
+import Calendar from 'pages/apps/calendar';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
@@ -36,7 +37,8 @@ export default function DashboardDefault() {
       <Grid item xs={12} md={8} lg={9}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <RepeatCustomerRate />
+            {/* <RepeatCustomerRate /> */}
+            <Calendar/>
           </Grid>
           <Grid item xs={12}>
             <ProjectOverview />
