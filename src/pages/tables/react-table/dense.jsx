@@ -82,33 +82,33 @@ export default function DenseTable() {
         footer: 'First Name',
         accessorKey: 'firstName'
       },
-      {
-        header: 'Last Name',
-        footer: 'LAST NAME',
-        accessorKey: 'lastName'
-      },
-      {
-        header: 'Email',
-        footer: 'Email',
-        accessorKey: 'email'
-      },
-      {
-        header: 'Age',
-        footer: 'Age',
-        accessorKey: 'age',
-        meta: { className: 'cell-right' }
-      },
-      {
-        header: 'Role',
-        footer: 'Role',
-        accessorKey: 'role'
-      },
-      {
-        header: 'Visits',
-        footer: 'Visits',
-        accessorKey: 'visits',
-        meta: { className: 'cell-right' }
-      },
+      // {
+      //   header: 'Last Name',
+      //   footer: 'LAST NAME',
+      //   accessorKey: 'lastName'
+      // },
+      // {
+      //   header: 'Email',
+      //   footer: 'Email',
+      //   accessorKey: 'email'
+      // },
+      // {
+      //   header: 'Age',
+      //   footer: 'Age',
+      //   accessorKey: 'age',
+      //   meta: { className: 'cell-right' }
+      // },
+      // {
+      //   header: 'Role',
+      //   footer: 'Role',
+      //   accessorKey: 'role'
+      // },
+      // {
+      //   header: 'Visits',
+      //   footer: 'Visits',
+      //   accessorKey: 'visits',
+      //   meta: { className: 'cell-right' }
+      // },
       {
         header: 'Status',
         footer: 'Status',
@@ -125,12 +125,12 @@ export default function DenseTable() {
           }
         }
       },
-      {
-        header: 'Profile Progress',
-        footer: 'Profile Progress',
-        accessorKey: 'progress',
-        cell: (props) => <LinearWithLabel value={props.getValue()} sx={{ minWidth: 75 }} />
-      }
+      // {
+      //   header: 'Profile Progress',
+      //   footer: 'Profile Progress',
+      //   accessorKey: 'progress',
+      //   cell: (props) => <LinearWithLabel value={props.getValue()} sx={{ minWidth: 75 }} />
+      // }
     ],
     []
   );

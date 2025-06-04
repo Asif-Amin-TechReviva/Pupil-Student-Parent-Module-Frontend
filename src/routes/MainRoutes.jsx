@@ -23,6 +23,8 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 // render - applications
 import PaymentTable from 'pages/Parent/paymentTable';
 import Assignments from 'pages/Parent/assignments';
+import GradesIndex from 'pages/Parent/grades/GradesIndex';
+import TabAttendance from 'sections/apps/profiles/account/TabAttendance';
 const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 const AppCalendar = Loadable(lazy(() => import('pages/apps/calendar')));
 
@@ -272,9 +274,14 @@ const MainRoutes = {
                       path: 'basic',
                       element: <AccountTabProfile />
                     },
+
                     {
                       path: 'personal',
                       element: <AccountTabPersonal />
+                    },
+                    {
+                      path: 'attendance',
+                      element: <TabAttendance />
                     },
                     {
                       path: 'my-account',

@@ -30,7 +30,9 @@ const AttendanceAndLeave = {
           id: 'View Attendance',
           title: <FormattedMessage id="Attendance" />,
           type: 'item',
-          url: '/academics/view-assignments'
+          url: '/apps/profiles/account/attendance',
+          breadcrumbs: false
+
           // target: true
         },
         {
