@@ -39,7 +39,7 @@ const AttendanceAndLeave = {
           id: 'Leave',
           title: <FormattedMessage id="Leave" />,
           type: 'item',
-          url: '/academics/view-grades',
+          url: '/academics/leave',
           breadcrumbs: false
           // target: true
         }
