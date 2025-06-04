@@ -15,7 +15,7 @@ const icons = {
 
 // ==============================|| MENU ITEMS - PAGES ||============================== //
 
-const AttendanceAndLeave= {
+const AttendanceAndLeave = {
   id: 'group-pages',
   // title: <FormattedMessage id="Academics" />,
   type: 'group',
@@ -30,17 +30,17 @@ const AttendanceAndLeave= {
           id: 'View Attendance',
           title: <FormattedMessage id="Attendance" />,
           type: 'item',
-          url: '/academics/view-assignments',
+          url: '/academics/view-assignments'
           // target: true
         },
         {
           id: 'Leave',
           title: <FormattedMessage id="Leave" />,
           type: 'item',
-          url: '/academics/view-grades',
-          breadcrumbs: false,
+          url: '/academics/leave',
+          breadcrumbs: false
           // target: true
-        },
+        }
         // {
         //   id: 'Bulk Edit',
         //   title: <FormattedMessage id="Bulk Edit" />,
@@ -48,12 +48,8 @@ const AttendanceAndLeave= {
         //   url: '/cashier/bulk-edit',
         //   // target: true
         // },
-       
-        
-          
       ]
-    },
-   
+    }
   ]
 };
 

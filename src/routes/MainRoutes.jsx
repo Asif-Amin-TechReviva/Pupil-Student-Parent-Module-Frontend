@@ -23,7 +23,6 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 // render - applications
 import PaymentTable from 'pages/Parent/paymentTable';
 import Assignments from 'pages/Parent/assignments';
-import GradesIndex from 'pages/Parent/grades/GradesIndex';
 const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 const AppCalendar = Loadable(lazy(() => import('pages/apps/calendar')));
 
@@ -136,6 +135,7 @@ const Landing = Loadable(lazy(() => import('pages/landing')));
 const ContactUS = Loadable(lazy(() => import('pages/contact-us')));
 const PricingPage = Loadable(lazy(() => import('pages/extra-pages/price/price1')));
 const PricingPage2 = Loadable(lazy(() => import('pages/extra-pages/price/price2')));
+const Leave = Loadable(lazy(() => import('pages/Parent/Leave/leave')));
 
 // ==============================|| MAIN ROUTES ||============================== //
 
@@ -161,26 +161,25 @@ const MainRoutes = {
         },
         {
           path: 'fee',
-          children:[
+          children: [
             {
-            path:'all-payments',
-            element:<PaymentTable />
-          },
-         
-        ]
+              path: 'all-payments',
+              element: <PaymentTable />
+            }
+          ]
         },
         {
           path: 'academics',
-          children:[
+          children: [
             {
-            path:'view-assignments',
-            element:<Assignments />
-          },
-          {
-          path:'view-grades',
-          element:<GradesIndex/>
-          }
-        ]
+              path: 'view-assignments',
+              element: <Assignments />
+            },
+            {
+              path: 'leave',
+              element: <Leave />
+            }
+          ]
         },
         {
           path: 'widget',
