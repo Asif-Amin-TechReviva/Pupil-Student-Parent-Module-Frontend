@@ -138,22 +138,33 @@ ReactTable.propTypes = {
 // ==============================|| REACT TABLE - BASIC ||============================== //
 
 export default function DenseTable() {
-  const [open, setOpen] = useState(false);
+  const [openRequest, setOpenRequest] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editRowData, setEditRowData] = useState(null);
+
   const data = makeData(10);
 
-  const handleOpenDialog = () => setOpen(true);
-  const handleCloseDialog = () => setOpen(false);
+  const handleOpenRequest = () => setOpenRequest(true);
+  const handleCloseRequest = () => setOpenRequest(false);
+
+  const handleEdit = (row) => {
+    setEditRowData(row);
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditRowData(null);
+    setOpenEdit(false);
+  };
 
   const columns = useMemo(
     () => [
       {
         header: 'Applied For',
-        footer: 'First Name',
         accessorKey: 'firstName'
       },
       {
         header: 'Status',
-        footer: 'Status',
         accessorKey: 'status',
         cell: (props) => {
           switch (props.getValue()) {
@@ -169,18 +180,24 @@ export default function DenseTable() {
       },
       {
         header: 'Applied On',
-        footer: 'Email',
         accessorKey: 'email'
       },
       {
         header: 'Action Taken On',
-        footer: 'Age',
         accessorKey: 'age'
       },
       {
         header: 'Action Taken By',
-        footer: 'Role',
         accessorKey: 'role'
+      },
+      {
+        header: 'Actions',
+        accessorKey: 'actions',
+        cell: ({ row }) => (
+          <Button size="small" variant="outlined" onClick={() => handleEdit(row.original)}>
+            Edit
+          </Button>
+        )
       }
     ],
     []
@@ -188,8 +205,9 @@ export default function DenseTable() {
 
   return (
     <>
-      <ReactTable data={data} columns={columns} title="Leave History" onRequestLeave={handleOpenDialog} />
-      <LeaveRequest open={open} handleClose={handleCloseDialog} />
+      <ReactTable data={data} columns={columns} title="Leave History" onRequestLeave={handleOpenRequest} />
+      <LeaveRequest open={openRequest} handleClose={handleCloseRequest} />
+      {editRowData && <LeaveRequest open={openEdit} handleClose={handleCloseEdit} initialData={editRowData} mode="edit" />}
     </>
   );
 }
