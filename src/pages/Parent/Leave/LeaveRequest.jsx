@@ -20,14 +20,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-export const LeaveRequest = ({ open, handleClose }) => {
-  const [leaveType, setLeaveType] = useState('');
-  const [multipleDays, setMultipleDays] = useState(false);
-  const [singleDate, setSingleDate] = useState(null);
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-  const [file, setFile] = useState(null);
-  const [description, setDescription] = useState('');
+export const LeaveRequest = ({ open, handleClose, initialData = {}, mode = 'create' }) => {
+  const [leaveType, setLeaveType] = useState(initialData.leaveType || '');
+  const [multipleDays, setMultipleDays] = useState(initialData.multipleDays || false);
+  const [singleDate, setSingleDate] = useState(initialData.singleDate ? dayjs(initialData.singleDate) : null);
+  const [fromDate, setFromDate] = useState(initialData.fromDate ? dayjs(initialData.fromDate) : null);
+  const [toDate, setToDate] = useState(initialData.toDate ? dayjs(initialData.toDate) : null);
+  const [file, setFile] = useState(null); // Not editing file
+  const [description, setDescription] = useState(initialData.description || '');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,13 +45,13 @@ export const LeaveRequest = ({ open, handleClose }) => {
       file
     };
 
-    console.log('Leave Request Submitted:', leaveRequestData);
+    console.log(mode === 'edit' ? 'Leave Update Submitted:' : 'Leave Request Submitted:', leaveRequestData);
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Request Leave</DialogTitle>
+      <DialogTitle>{mode === 'edit' ? 'Update Leave Request' : 'Request Leave'}</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent>
           <Stack spacing={2}>
@@ -118,7 +118,7 @@ export const LeaveRequest = ({ open, handleClose }) => {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button type="submit" variant="contained">
-            Submit
+            {mode === 'edit' ? 'Update' : 'Apply'}
           </Button>
         </DialogActions>
       </form>
@@ -128,5 +128,7 @@ export const LeaveRequest = ({ open, handleClose }) => {
 
 LeaveRequest.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
+  mode: PropTypes.oneOf(['create', 'edit'])
 };
