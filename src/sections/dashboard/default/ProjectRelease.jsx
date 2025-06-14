@@ -1,80 +1,72 @@
-// material-ui
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import LinearProgress from '@mui/material/LinearProgress';
-import ListItemButton from '@mui/material/ListItemButton';
-
-// project-imports
+import React, { useEffect, useState } from 'react';
+import { Typography, Stack, Divider, Box } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import { getAllEvents } from '../../../api/event';
 import MainCard from 'components/MainCard';
-import Dot from 'components/@extended/Dot';
 
-// assets
-import { Add, Link1 } from 'iconsax-react';
+function formatDateRange(start, end) {
+  const s = new Date(start).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+  const e = new Date(end).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+  return s === e ? s : `${s} - ${e}`;
+}
 
-// =========================|| DATA WIDGET - ADD NEW TASK ||========================= //
+export default function StudentEventNoticeBoard() {
+  const [events, setEvents] = useState([]);
 
-export default function ProjectRelease() {
+  useEffect(() => {
+    getAllEvents()
+      .then(setEvents)
+      .catch((err) => console.error('Failed to fetch events', err));
+  }, []);
+
   return (
-    <MainCard title="Project - Able Pro    ">
-      <Grid container spacing={1.5}>
-        <Grid item xs={12}>
-          <Stack spacing={1}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography>Release v1.2.0</Typography>
-              <Typography>72%</Typography>
+    <MainCard>
+      <Stack spacing={2}>
+        <Typography variant="h6" fontWeight={600}>
+          📋 Upcoming Events
+        </Typography>
+        <Divider />
+
+        {/* Scrollable only if more than 4 items */}
+        <Box
+          sx={{
+            maxHeight: 4 * 54, // Assuming each item (with padding) is ~64px tall
+            overflowY: 'auto',
+            pr: 1
+          }}
+        >
+          {events.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No events to display.
+            </Typography>
+          ) : (
+            <Stack spacing={1}>
+              {events.map((event) => (
+                <Box key={event.id}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body1" fontWeight={500}>
+                      <EventIcon fontSize="small" sx={{ mr: 1, verticalAlign: 'middle', color: 'green' }} />
+                      {event.eventName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {formatDateRange(event.startDate, event.endDate)}
+                    </Typography>
+                  </Stack>
+                  <Divider sx={{ my: 1 }} />
+                </Box>
+              ))}
             </Stack>
-            <LinearProgress variant="determinate" value={72} />
-          </Stack>
-        </Grid>
-        <Grid item xs={12}>
-          <List>
-            <ListItemButton sx={{ flexWrap: 'wrap', rowGap: 1 }}>
-              <ListItemIcon>
-                <Dot color="warning" />
-              </ListItemIcon>
-              <ListItemText primary="Horizontal Layout" />
-              <Chip
-                label={
-                  <Typography sx={{ display: 'flex', alignItems: 'center', gap: 0.5, '& svg': { width: 12, height: 12 } }}>
-                    <Link1 />2
-                  </Typography>
-                }
-                size="small"
-                sx={{ borderRadius: 1 }}
-              />
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon>
-                <Dot color="warning" />
-              </ListItemIcon>
-              <ListItemText primary="Invoice Generator" />
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon>
-                <Dot />
-              </ListItemIcon>
-              <ListItemText primary="Package Upgrades" />
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon>
-                <Dot color="success" />
-              </ListItemIcon>
-              <ListItemText primary="Figma Auto Layout" />
-            </ListItemButton>
-          </List>
-        </Grid>
-        <Grid item xs={12}>
-          <Button fullWidth variant="contained" startIcon={<Add />}>
-            Add task
-          </Button>
-        </Grid>
-      </Grid>
+          )}
+        </Box>
+      </Stack>
     </MainCard>
   );
 }
