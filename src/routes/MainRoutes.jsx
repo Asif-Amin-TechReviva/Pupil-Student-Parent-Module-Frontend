@@ -137,7 +137,7 @@ const Landing = Loadable(lazy(() => import('pages/landing')));
 const ContactUS = Loadable(lazy(() => import('pages/contact-us')));
 const PricingPage = Loadable(lazy(() => import('pages/extra-pages/price/price1')));
 const PricingPage2 = Loadable(lazy(() => import('pages/extra-pages/price/price2')));
-const Leave = Loadable(lazy(() => import('pages/Parent/Leave/leave')));
+const Leave = Loadable(lazy(() => import('pages/Parent/Leave/leaveHistory')));
 
 // ==============================|| MAIN ROUTES ||============================== //
 
