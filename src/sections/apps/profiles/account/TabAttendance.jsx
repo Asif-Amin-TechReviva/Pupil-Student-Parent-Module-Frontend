@@ -30,7 +30,8 @@ import MainCard from 'components/MainCard';
 
 import makeData from 'data/react-table';
 import Calendar from 'pages/apps/calendar';
-import { LeaveRequest } from 'pages/Parent/Leave/LeaveRequest';
+import DenseTable from 'pages/Parent/Leave/leaveHistory';
+// import { LeaveRequest } from 'pages/Parent/Leave/LeaveRequest';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -211,16 +212,19 @@ export default function TabAttendance() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={8}>
           <MainCard>
             <Calendar />
           </MainCard>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <ReactTable data={data} columns={columns} title="Leave History" onRequestLeave={handleOpenDialog} />
+        <Grid item xs={12} md={10}>
+          <DenseTable />
         </Grid>
       </Grid>
-      <LeaveRequest open={open} handleClose={handleCloseDialog} />
+      {/* Dialog for Create */}
+      {/* <LeaveRequest open={open} handleClose={handleCloseDialog} /> */}
+      {/* Dialog for Edit */}
+      {/* <LeaveRequest open={openEdit} handleClose={handleCloseEdit} initialData={editRowData} mode="edit" /> */}
     </>
   );
 }

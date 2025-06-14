@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 // material-ui
 import {
@@ -15,7 +15,8 @@ import {
   Typography,
   Stack,
   useMediaQuery,
-  useTheme
+  useTheme,
+  Tooltip
 } from '@mui/material';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
@@ -25,54 +26,55 @@ import { flexRender, useReactTable, getCoreRowModel } from '@tanstack/react-tabl
 // project import
 import ScrollX from 'components/ScrollX';
 import MainCard from 'components/MainCard';
-// import { CSVExport } from 'components/third-party/react-table';
+import { LeaveRequest } from './leaveRequest';
+import { getLeaveHistory } from 'api/leave';
 
-import makeData from 'data/react-table';
-import { LeaveRequest } from './LeaveRequest';
-
-// ==============================|| REACT TABLE ||============================== //
+// ==============================|| REACT TABLE COMPONENT ||============================== //
 
 function ReactTable({ columns, data, title, onRequestLeave }) {
   const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
 
-  const headers = table?.getAllColumns()?.map((col) => ({
-    label: typeof col.columnDef.header === 'string' ? col.columnDef.header : '#',
-    key: col.columnDef.accessorKey
-  }));
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const renderMobileCards = () => (
     <Stack spacing={2} sx={{ p: 2 }}>
       {data.map((row, index) => (
         <Paper key={index} sx={{ p: 2 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-            <Typography variant="body2" fontWeight={500}>
-              <strong>Status</strong>
-            </Typography>
-            {(() => {
-              switch (row.status) {
-                case 'Complicated':
-                  return <Chip color="error" label="Rejected" size="small" variant="light" />;
-                case 'Relationship':
-                  return <Chip color="success" label="Approved" size="small" variant="light" />;
-                default:
-                  return <Chip color="info" label="Applied" size="small" variant="light" />;
-              }
-            })()}
+          {/* Status + Edit Row */}
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography variant="body2" fontWeight={500}>
+                <strong>Status</strong>
+              </Typography>
+              <Chip
+                color={row.status === 'APPROVED' ? 'success' : row.status === 'REJECTED' ? 'error' : 'info'}
+                label={row.status}
+                size="small"
+                variant="light"
+              />
+            </Stack>
+            <Button size="small" variant="outlined" onClick={() => handleEdit(row)}>
+              Edit
+            </Button>
           </Stack>
+
           <Typography variant="body2">
-            <strong>Applied For:</strong> {row.firstName}
+            <strong>Applied For:</strong> {row.createdAt}
           </Typography>
           <Typography variant="body2">
-            <strong>Applied On:</strong> {row.lastName}
+            <strong>Applied On:</strong> {row.appliedOn}
           </Typography>
           <Typography variant="body2">
-            <strong>Action Taken On:</strong> {row.age}
+            <strong>Leave Type:</strong> {row.leaveType}
           </Typography>
           <Typography variant="body2">
-            <strong>Action Taken By:</strong> {row.role}
+            <strong>Action Taken On:</strong> {row.actionedOn || '—'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Action Taken By:</strong> {row.actionedBy || '—'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Reason:</strong> {row.reason?.length > 20 ? row.reason.slice(0, 20) + '...' : row.reason || '—'}
           </Typography>
         </Paper>
       ))}
@@ -88,7 +90,6 @@ function ReactTable({ columns, data, title, onRequestLeave }) {
           <Button variant="contained" color="primary" size="small" startIcon={<EventAvailableIcon />} onClick={onRequestLeave}>
             Request Leave
           </Button>
-          {/* <CSVExport {...{ data, headers, filename: 'dense.csv' }} /> */}
         </div>
       }
     >
@@ -135,61 +136,112 @@ ReactTable.propTypes = {
   onRequestLeave: PropTypes.func
 };
 
-// ==============================|| REACT TABLE - BASIC ||============================== //
+// ==============================|| DENSE TABLE WRAPPER ||============================== //
 
 export default function DenseTable() {
   const [openRequest, setOpenRequest] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editRowData, setEditRowData] = useState(null);
-
-  const data = makeData(10);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleOpenRequest = () => setOpenRequest(true);
   const handleCloseRequest = () => setOpenRequest(false);
-
   const handleEdit = (row) => {
     setEditRowData(row);
     setOpenEdit(true);
   };
-
   const handleCloseEdit = () => {
     setEditRowData(null);
     setOpenEdit(false);
   };
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await getLeaveHistory(); // This should return the API JSON
+        const rows =
+          response?.data?.map((item) => ({
+            id: item.id,
+            createdAt:
+              new Date(item.startDate).toLocaleDateString() === new Date(item.endDate).toLocaleDateString()
+                ? new Date(item.startDate).toLocaleDateString()
+                : `${new Date(item.startDate).toLocaleDateString()} - ${new Date(item.endDate).toLocaleDateString()}`,
+            status: item.status,
+            appliedOn: new Date(item.createdAt).toLocaleDateString(),
+            actionedOn: item.actionedAt ? new Date(item.actionedAt).toLocaleDateString() : null,
+            reason: item.reason,
+            startDate: item.startDate,
+            endDate: item.endDate,
+
+            leaveType: item.leaveType,
+            actionedBy: item.actionBy
+              ? `${item.actionBy.firstName} ${item.actionBy.lastName}`
+              : item.actionById
+                ? 'ID: ' + item.actionById
+                : null
+          })) || [];
+        setData(rows);
+      } catch (error) {
+        console.error('Error fetching leave data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getData();
+  }, []);
+
   const columns = useMemo(
     () => [
       {
         header: 'Applied For',
-        accessorKey: 'firstName'
+        accessorKey: 'createdAt'
+      },
+
+      {
+        header: 'Applied On',
+        accessorKey: 'appliedOn'
+      },
+      {
+        header: 'Leave TYPE',
+        accessorKey: 'leaveType'
       },
       {
         header: 'Status',
         accessorKey: 'status',
         cell: (props) => {
-          switch (props.getValue()) {
-            case 'Complicated':
-              return <Chip color="error" label="Complicated" size="small" variant="light" />;
-            case 'Relationship':
-              return <Chip color="success" label="Relationship" size="small" variant="light" />;
-            case 'Single':
-            default:
-              return <Chip color="info" label="Single" size="small" variant="light" />;
-          }
+          const val = props.getValue();
+          const color = val === 'APPROVED' ? 'success' : val === 'REJECTED' ? 'error' : 'info';
+          return <Chip color={color} label={val} size="small" variant="light" />;
         }
       },
       {
-        header: 'Applied On',
-        accessorKey: 'email'
-      },
-      {
         header: 'Action Taken On',
-        accessorKey: 'age'
+        accessorKey: 'actionedOn',
+        cell: (props) => props.getValue() || '—'
       },
       {
         header: 'Action Taken By',
-        accessorKey: 'role'
+        accessorKey: 'actionedBy',
+        cell: (props) => props.getValue() || '—'
       },
+
+      {
+        header: 'Reason',
+        accessorKey: 'reason',
+        cell: (props) => {
+          const reason = props.getValue();
+          if (!reason) return '—';
+          const truncated = reason.length > 20 ? reason.slice(0, 20) + '...' : reason;
+          return (
+            <Tooltip title={reason} arrow>
+              <span>{truncated}</span>
+            </Tooltip>
+          );
+        }
+      },
+      ,
       {
         header: 'Actions',
         accessorKey: 'actions',
@@ -202,6 +254,8 @@ export default function DenseTable() {
     ],
     []
   );
+
+  if (loading) return <Typography variant="h6">Loading leave records...</Typography>;
 
   return (
     <>
