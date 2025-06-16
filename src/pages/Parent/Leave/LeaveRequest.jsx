@@ -108,7 +108,8 @@ export const LeaveRequest = ({ open, handleClose, initialData = {}, mode = 'crea
               <InputLabel>Leave Duration</InputLabel>
               <Select value={leaveDuration} onChange={(e) => setLeaveDuration(e.target.value)} label="Leave Duration">
                 <MenuItem value="FULLDAY">Full Day</MenuItem>
-                <MenuItem value="HALFDAY">Half Day</MenuItem>
+                <MenuItem value="HALFDAYMORNING">Half Day Morning</MenuItem>
+                <MenuItem value="HALFDAYEVENING">Half Day Evening</MenuItem>
               </Select>
               {errors.leaveDuration && <FormHelperText>{errors.leaveDuration}</FormHelperText>}
             </FormControl>
