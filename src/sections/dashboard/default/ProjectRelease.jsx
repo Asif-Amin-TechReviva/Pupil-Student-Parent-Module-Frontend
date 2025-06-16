@@ -31,7 +31,7 @@ export default function StudentEventNoticeBoard() {
     <MainCard>
       <Stack spacing={2}>
         <Typography variant="h6" fontWeight={600}>
-          📋 Upcoming Events
+          📋 Upcoming Events And Holidays
         </Typography>
         <Divider />
 
