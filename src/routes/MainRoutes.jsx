@@ -178,6 +178,10 @@ const MainRoutes = {
               element: <Assignments />
             },
             {
+              path: 'view-grades',
+              element: <GradesIndex />
+            },
+            {
               path: 'leave',
               element: <Leave />
             }
