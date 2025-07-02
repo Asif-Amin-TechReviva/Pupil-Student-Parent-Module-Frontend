@@ -212,12 +212,12 @@ export default function TabAttendance() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={12}>
           <MainCard>
             <Calendar />
           </MainCard>
         </Grid>
-        <Grid item xs={12} md={10}>
+        <Grid item xs={12} md={12}>
           <DenseTable />
         </Grid>
       </Grid>
