@@ -81,3 +81,21 @@ export const uploadImage = async (file) => {
     throw new Error(error.response?.data?.message || 'Failed to upload report');
   }
 };
+
+export const fetchMyAttendance = async ({ startDate, endDate, status, subjectId }) => {
+  try {
+    const response = await axiosServices.get('/attendance/view', {
+      params: {
+        startDate,
+        endDate,
+        status,
+        subjectId
+      }
+    });
+
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching attendance records:', error);
+    throw new Error(error.response?.data?.message || 'Error fetching attendance records');
+  }
+};
